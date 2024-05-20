@@ -23,6 +23,33 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen 
+        name='jobs'
+        options={{
+          title: 'Jobs',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'map' : 'map-outline'} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen 
+        name='docs'
+        options={{
+          title: 'Docs',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'documents' : 'documents-outline'} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen 
+        name='forms'
+        options={{
+          title: 'Forms',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'documents' : 'documents-outline'} color={color} />
+          ),
+        }}
+      />
       <Tabs.Screen
         name="explore"
         options={{

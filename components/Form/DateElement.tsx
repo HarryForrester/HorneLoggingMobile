@@ -1,25 +1,17 @@
-import React from 'react'
-import {
-  View,
-  Text,
-  TextInput,
-  useColorScheme,
-  TouchableOpacity,
-} from 'react-native'
-import styles from '../../constants/Styles'
-import BouncyCheckbox from 'react-native-bouncy-checkbox'
-//import DatePicker from 'react-native-date-picker'
 import DateTimePicker from '@react-native-community/datetimepicker';
+import React from 'react';
+import { Text, TouchableOpacity, View, useColorScheme } from 'react-native';
+import styles from '../../constants/Styles';
 
 interface DateProps {
-  elementKey: string
-  value: Date
-  labelValue: string
-  labelText: string
-  formDateOpen: any
-  toggleOpenDate: () => void
-  updateDate: (date: string) => void
-  handleUpdateDate: (date: Date) => void
+  elementKey: string;
+  value: Date;
+  labelValue: string;
+  labelText: string;
+  formDateOpen: any;
+  toggleOpenDate: () => void;
+  updateDate: (date: string) => void;
+  handleUpdateDate: (date: Date) => void;
 }
 
 const DateElement: React.FC<DateProps> = ({
@@ -32,56 +24,51 @@ const DateElement: React.FC<DateProps> = ({
   updateDate,
   handleUpdateDate,
 }) => {
-  const colorScheme = useColorScheme()
-  const isDarkMode = colorScheme === 'dark'
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === 'dark';
+
+  const onDateChange = (event: any, selectedDate: any) => {
+    const currentDate = selectedDate || value;
+
+    const updatedDateOpen = { ...formDateOpen };
+    updatedDateOpen[elementKey] = false;
+    updateDate(updatedDateOpen);
+    handleUpdateDate(currentDate);
+  };
 
   return (
     <View>
-      <Text
-        style={[
-          styles.modalTextBold,
-          isDarkMode ? styles.textInputDark : styles.textLight,
-        ]}
-      >
+      <Text style={[styles.modalTextBold, isDarkMode ? styles.textInputDark : styles.textLight]}>
         {labelText}
       </Text>
 
       <TouchableOpacity
-        style={[
-          styles.dateButton,
-          {backgroundColor: isDarkMode ? 'grey' : 'white'},
-        ]}
-        onPress={toggleOpenDate}
-      >
+        style={[styles.dateButton, { backgroundColor: isDarkMode ? 'grey' : 'white' }]}
+        onPress={toggleOpenDate}>
         <Text
           style={[
             styles.dateButtonText,
             isDarkMode ? styles.buttonTextDark : styles.buttonTextLight,
-          ]}
-        >
-          {`Date ${labelValue}`}
+          ]}>
+          {value.toLocaleDateString()}
         </Text>
       </TouchableOpacity>
 
       {formDateOpen[elementKey] && (
-       <DateTimePicker
-            value={value}
-            mode="date"
-            display="default"
-            onChange={(selectedDate: any) => {
-              const updatedDateOpen = { ...formDateOpen };
-              updatedDateOpen[elementKey] = false;
-              updateDate(updatedDateOpen);
-              handleUpdateDate(selectedDate);            } }
-            onTouchCancel={() => {
-              const updatedDateOpen = { ...formDateOpen };
-              updatedDateOpen[elementKey] = false;
-              updateDate(updatedDateOpen);
-            } } // This handles Android back button to close the picker
-          />
+        <DateTimePicker
+          value={value}
+          mode="date"
+          display="default"
+          onChange={onDateChange}
+          onTouchCancel={() => {
+            const updatedDateOpen = { ...formDateOpen };
+            updatedDateOpen[elementKey] = false;
+            updateDate(updatedDateOpen);
+          }} // This handles Android back button to close the picker
+        />
       )}
     </View>
-  )
-}
+  );
+};
 
-export default DateElement
+export default DateElement;

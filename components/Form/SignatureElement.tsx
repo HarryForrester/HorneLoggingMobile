@@ -1,47 +1,35 @@
-import React from 'react'
-import {
-  View,
-  Text,
-  TextInput,
-  useColorScheme,
-  TouchableOpacity,
-  Image,
-} from 'react-native'
-import styles from '../../constants/Styles'
-import Sign from '../../components/SignatureComponent'
+import React from 'react';
+import { Text, View, useColorScheme } from 'react-native';
+import Sign from '../../components/SignatureComponent';
+import styles from '../../constants/Styles';
 
 interface SignatureElementProps {
-  label: string
-  defaultValue: string
-  handleSignatureChange: (signature: object) => void
+  label: string;
+  value: string;
+  handleSignatureChange: (signature: object) => void;
 }
 
 const SignatureElement: React.FC<SignatureElementProps> = ({
   label,
-  defaultValue,
+  value,
   handleSignatureChange,
 }) => {
-  const colorScheme = useColorScheme()
-  const isDarkMode = colorScheme === 'dark'
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === 'dark';
 
   return (
     <View>
-      <Text
-        style={[
-          styles.modalTextBold,
-          isDarkMode ? styles.textInputDark : styles.textLight,
-        ]}
-      >
+      <Text style={[styles.modalTextBold, isDarkMode ? styles.textInputDark : styles.textLight]}>
         {label}
       </Text>
 
       <Sign
         text={label}
-        defaultValue={defaultValue}
+        value={value}
         onOK={(signature: any) => handleSignatureChange(signature)}
       />
     </View>
-  )
-}
+  );
+};
 
-export default SignatureElement
+export default SignatureElement;

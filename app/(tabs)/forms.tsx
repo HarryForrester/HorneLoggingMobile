@@ -3,11 +3,13 @@ import { useApp, useQuery, useUser } from '@realm/react';
 import * as SecureStore from 'expo-secure-store';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, TouchableHighlight, View, useColorScheme } from 'react-native';
+import AddOnJobTrainingForm from '../../components/Modals/AddOnJobTrainingForm';
 import TimeSheetModal from '../../components/Modals/TimeSheetModal';
 import styles from '../../constants/Styles';
 import Forms from '../../schemas/Forms';
 import People from '../../schemas/People';
 import TimeSheetAccess from '../../schemas/TimeSheetAccess';
+
 const FormTab = () => {
   const [isTimeSheetModalVisible, setTimeSheetVisible] = useState(false);
   const [people, setPeople] = useState<any>([]);
@@ -22,6 +24,8 @@ const FormTab = () => {
     template: null,
     data: {},
   });
+  const [trainingModalVisible, setTrainingModalVisible] = useState(false);
+
   //const [isLoading, setIsLoading] = useState(true); // State to track loading
   //const [isLoadingForm, setIsLoadingForm] = useState(false); // State to track loading
 
@@ -32,11 +36,11 @@ const FormTab = () => {
   const app = useApp();
   const user = useUser();
 
-  useEffect(() => {
+  /*   useEffect(() => {
     loadSelectedForm();
-  }, []);
+  }, []); */
 
-  useEffect(() => {
+  /* useEffect(() => {
     const saveSelectedForm = async () => {
       try {
         if (selectedForm) {
@@ -52,15 +56,19 @@ const FormTab = () => {
   const loadSelectedForm = async () => {
     try {
       const storedForm = await SecureStore.getItemAsync('selectedForm');
-
+      console.log('oi u clujt', JSON.stringify(storedForm, null, 2));
       if (storedForm) {
-        setSelectedForm(JSON.parse(storedForm));
+        //setSelectedForm(JSON.parse(storedForm));
+        setSelectedForm((prevSelectedForm: any) => ({
+          ...prevSelectedForm,
+          data: JSON.parse(storedForm),
+        }));
       }
     } catch (err) {
       console.error('Error loading selectedForm form AsyncStorage:', err);
     }
   };
-
+ */
   useEffect(() => {
     const fm = async () => {
       try {
@@ -155,24 +163,24 @@ const FormTab = () => {
     //setIsLoadingForm(true);
     const existingFormData = await getFormDataForTemplate(form);
 
-    console.log('form: ', form);
-    console.log('existingForm: ', existingFormData);
+    console.log('form jmy vun: ', JSON.stringify(existingFormData, null, 2));
+    //console.log('existingForm: ', JSON.stringify(existingFormData, null, 2));
 
     if (existingFormData) {
       const current = JSON.stringify(form.sectionsSerialized);
       const existing = JSON.stringify(existingFormData.sectionsSerialized);
 
-      if (existing.length === current.length) {
+      /* if (existing.length === current.length) {
         setSelectedForm({
           template: form,
-          data: existingFormData || form,
+          data: existingFormData,
         });
-      } else {
-        setSelectedForm({
-          template: form,
-          data: form,
-        });
-      }
+      } else { */
+      setSelectedForm({
+        template: form,
+        data: existingFormData,
+      });
+      /*  } */
     } else {
       setSelectedForm({
         template: form,
@@ -266,23 +274,43 @@ const FormTab = () => {
       <ScrollView contentContainerStyle={styles.containerScroll} style={{ maxHeight: '100%' }}>
         <View style={[isDarkMode ? styles.darkmode : styles.normal]}>
           {filteredTimesheet.length > 0 && (
+            <View style={styles.buttonContainerForms}>
+              <TouchableHighlight
+                style={[
+                  styles.formButton,
+                  isDarkMode ? styles.buttonBackgroundDark : styles.buttonBackgroundLight,
+                ]}
+                underlayColor={isDarkMode ? '#969696' : '#e7e7e7'}
+                onPress={openTimeSheetModal}>
+                <Text
+                  style={[
+                    styles.buttonText,
+                    isDarkMode ? styles.buttonTextDark : styles.headerTextLight,
+                  ]}>
+                  Time Sheet
+                </Text>
+              </TouchableHighlight>
+            </View>
+          )}
+          <View style={styles.buttonContainerForms}>
             <TouchableHighlight
               style={[
                 styles.formButton,
                 isDarkMode ? styles.buttonBackgroundDark : styles.buttonBackgroundLight,
               ]}
               underlayColor={isDarkMode ? '#969696' : '#e7e7e7'}
-              onPress={openTimeSheetModal}>
+              onPress={() => {
+                setTrainingModalVisible(true);
+              }}>
               <Text
                 style={[
                   styles.buttonText,
                   isDarkMode ? styles.buttonTextDark : styles.headerTextLight,
                 ]}>
-                Time Sheet
+                On-Job Training
               </Text>
             </TouchableHighlight>
-          )}
-
+          </View>
           <View>
             {filteredForms.map((form: any) => (
               <View key={form._id} style={styles.buttonContainerForms}>
@@ -308,6 +336,11 @@ const FormTab = () => {
           </View>
         </View>
       </ScrollView>
+
+      <AddOnJobTrainingForm
+        modalVisible={trainingModalVisible}
+        setModalVisible={setTrainingModalVisible}
+      />
 
       <FormModal
         isEditModalVisible={isEditModalVisible}

@@ -58,7 +58,8 @@ const FormModal: React.FC<Props> = ({
             data: JSON.stringify(data),
           });
         });
-
+        resetFormModal();
+        closeFormModal();
         Alert.alert('Submitted!', 'Form has been submitted successfully');
       }
     } catch (error) {
@@ -69,8 +70,6 @@ const FormModal: React.FC<Props> = ({
   const submitFormTemplate = async () => {
     if (selectedForm.data) {
       handleAddForm(selectedForm.data);
-      resetFormModal();
-      closeFormModal();
     }
   };
 
@@ -109,11 +108,15 @@ const FormModal: React.FC<Props> = ({
   };
 
   const resetFormModal = async () => {
+    console.log('Selected Form Template:', JSON.stringify(selectedForm, null, 2));
     setSelectedForm({
       template: selectedForm.template,
       data: selectedForm.template,
     });
     saveFormDataForTemplate(selectedForm.template._id, selectedForm.template);
+    //await SecureStore.deleteItemAsync(selectedForm.template._id);
+
+    //await SecureStore.deleteItemAsync('selectedForm');
     resetItems(selectedForm);
   };
 
@@ -133,25 +136,32 @@ const FormModal: React.FC<Props> = ({
     data: any,
   ) => {
     setSelectedForm((prevSelectedForm: any) => {
-      const updatedForm = { ...prevSelectedForm };
+      // Clone the previous state to avoid direct mutations
+      const updatedForm = JSON.parse(JSON.stringify(prevSelectedForm));
 
-      const section = updatedForm.data.sectionsSerialized[sectionIndex]; // Access sections from template property
-      if (section && section.items.length > labelIndex) {
-        const updatedSection = { ...section };
+      console.log('Before change:', JSON.stringify(updatedForm, null, 2));
 
-        const currentLabel = updatedSection.items[labelIndex];
-        if (currentLabel && currentLabel.type === elementType) {
-          const updatedLabel = { ...currentLabel, [propertyName]: data };
+      if (
+        updatedForm.data.sectionsSerialized[sectionIndex] &&
+        updatedForm.data.sectionsSerialized[sectionIndex].items &&
+        updatedForm.data.sectionsSerialized[sectionIndex].items[labelIndex]
+      ) {
+        const section = updatedForm.data.sectionsSerialized[sectionIndex];
+        const currentItem = section.items[labelIndex];
 
-          updatedSection.items[labelIndex] = updatedLabel;
-          updatedForm.data.sectionsSerialized[sectionIndex] = updatedSection; // Update sections in data property
+        // Check if the current item's type matches the given elementType
+        if (currentItem.type === elementType) {
+          // Update the property with the new data
+          currentItem[propertyName] = data;
         }
       }
 
       // Save form data to AsyncStorage
       saveFormDataForTemplate(updatedForm.template._id, updatedForm.data);
+      console.log('After change:', JSON.stringify(updatedForm, null, 2));
 
-      return { ...updatedForm };
+      // Return the updated form state
+      return updatedForm;
     });
   };
 

@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 12,
     paddingHorizontal: 20,
-    maxWidth: 150,
+    width: 150,
   },
   buttonText: {
     fontSize: 16,

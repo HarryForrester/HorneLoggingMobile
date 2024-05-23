@@ -23,8 +23,8 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen 
-        name='jobs'
+      <Tabs.Screen
+        name="jobs"
         options={{
           title: 'Jobs',
           tabBarIcon: ({ color, focused }) => (
@@ -32,8 +32,8 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen 
-        name='docs'
+      <Tabs.Screen
+        name="docs"
         options={{
           title: 'Docs',
           tabBarIcon: ({ color, focused }) => (
@@ -41,8 +41,8 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen 
-        name='forms'
+      <Tabs.Screen
+        name="forms"
         options={{
           title: 'Forms',
           tabBarIcon: ({ color, focused }) => (
@@ -54,6 +54,15 @@ export default function TabLayout() {
         name="explore"
         options={{
           title: 'Explore',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="tasks"
+        options={{
+          title: 'Tasks',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
           ),

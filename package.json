@@ -26,12 +26,14 @@
     "expo": "~51.0.7",
     "expo-constants": "~16.0.1",
     "expo-dev-client": "~4.0.14",
+    "expo-device": "~6.0.2",
     "expo-file-system": "~17.0.1",
     "expo-font": "~12.0.5",
     "expo-image-picker": "~15.0.5",
     "expo-intent-launcher": "~11.0.1",
     "expo-linking": "~6.3.1",
     "expo-media-library": "~16.0.3",
+    "expo-notifications": "~0.28.3",
     "expo-router": "~3.5.14",
     "expo-secure-store": "~13.0.1",
     "expo-sharing": "~12.0.1",
@@ -39,6 +41,7 @@
     "expo-status-bar": "~1.12.1",
     "expo-system-ui": "~3.0.4",
     "expo-web-browser": "~13.0.3",
+    "firebase": "^10.12.1",
     "formik": "^2.4.6",
     "moment": "^2.30.1",
     "react": "18.2.0",
@@ -59,9 +62,7 @@
     "react-native-web": "~0.19.10",
     "react-native-webview": "13.8.6",
     "realm": "^12.8.1",
-    "yup": "^1.4.0",
-    "expo-notifications": "~0.28.3",
-    "expo-device": "~6.0.2"
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

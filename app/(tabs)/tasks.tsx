@@ -106,6 +106,7 @@ function TasksTab() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
+    paddingTop: 40,
     padding: 16,
   },
   taskContainer: {

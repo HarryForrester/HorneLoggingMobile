@@ -1,7 +1,10 @@
-import { useApp, useObject, useRealm } from '@realm/react';
+import { Crew } from '@/schemas/Crew';
+import People from '@/schemas/People';
+import { findNameById } from '@/utils/findUserById';
+import { useApp, useObject, useQuery, useRealm } from '@realm/react';
 import { format } from 'date-fns';
 import { Formik } from 'formik';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   Button,
   Dimensions,
@@ -15,7 +18,6 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Task, TaskNotes } from '../../schemas/Task';
-
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const EditTaskModal = ({ modalVisible, setModalVisible, task }: any) => {
@@ -24,6 +26,19 @@ const EditTaskModal = ({ modalVisible, setModalVisible, task }: any) => {
 
   const realm = useRealm();
   const myTask = useObject(Task, task?._id);
+
+  const crews = useQuery(Crew);
+  const people = useQuery(People);
+  const currentUserId = app.currentUser?.customData._id;
+  console.log('hahhaa', currentUserId);
+  useEffect(() => {
+    if (modalVisible) {
+      // Scroll to bottom when modal is opened
+      setTimeout(() => {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+      }, 100); // Delay to ensure content is rendered
+    }
+  }, [modalVisible]);
 
   return (
     <Modal
@@ -60,7 +75,7 @@ const EditTaskModal = ({ modalVisible, setModalVisible, task }: any) => {
                   ),
                 })} */
                 onSubmit={(values, { resetForm }) => {
-                  console.log('on suvmi', values);
+                  console.log('on submit', values);
                   const userId = app.currentUser?.customData._id;
 
                   try {
@@ -107,14 +122,19 @@ const EditTaskModal = ({ modalVisible, setModalVisible, task }: any) => {
                               key={index}
                               style={[
                                 styles.noteContainer,
-                                note.from === 'Office'
+                                note.from === 'Office' || note.from === currentUserId
                                   ? styles.notesContainerOther
                                   : styles.notesContainerEmployee,
                               ]}>
-                              <Text style={styles.noteFrom}>From: {note.from}</Text>
+                              <Text style={styles.noteFrom}>
+                                From:{' '}
+                                {note.from === 'Office'
+                                  ? 'Office'
+                                  : findNameById(note.from, people, crews)}
+                              </Text>
                               <Text style={styles.noteDate}>
                                 <Text>
-                                  Date: {format(new Date(task.date), 'MMMM do yyyy, h:mm:ss a')}
+                                  Date: {format(new Date(note.date), 'MMMM do yyyy, h:mm:ss a')}
                                 </Text>
                               </Text>
                               <Text>{note.body}</Text>

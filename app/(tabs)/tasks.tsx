@@ -1,6 +1,8 @@
+import TaskStyles from '@/constants/TaskStyles';
 import { useQuery, useUser } from '@realm/react';
+import { format } from 'date-fns';
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import EditTaskModal from '../../components/Modals/EditTaskModal';
 import { Crew } from '../../schemas/Crew';
 import People from '../../schemas/People';
@@ -18,14 +20,16 @@ function TasksTab() {
   };
   const user = useUser();
 
-  const tasks = useQuery(Task).filter((task: any) => {
-    return task.to.includes(user.customData._id);
-  });
+  const tasks = useQuery(Task)
+    .filter((task: any) => {
+      return task.to.includes(user.customData._id);
+    })
+    .reverse();
   const crews = useQuery(Crew);
   const people = useQuery(People);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={TaskStyles.container}>
       {isEditTaskModalVisible && (
         <EditTaskModal
           modalVisible={isEditTaskModalVisible}
@@ -34,132 +38,78 @@ function TasksTab() {
         />
       )}
 
-      {tasks.map((task) => {
+      {tasks.map((task: any) => {
         const meme = task.notes;
         console.log('task owowo', meme);
         const latestMessage = task.notes[task.notes.length - 1];
 
         return (
-          <View key={task._id.toString()} style={styles.taskContainer}>
-            <Text style={[styles.subject, { color: getPriorityColor(task.priority) }]}>
-              Subject: {task.subject}
-            </Text>
-            <Text>Attn: {findNamesByIds(task.to, people, crews)}</Text>
-            <Text>Priority: {task.priority}</Text>
-            <Text>Date: {task.date}</Text>
-            <Text>
-              From:{' '}
-              {task.from === 'Office'
-                ? 'Office'
-                : findNameById(task.from?.toString(), people, crews)}
-            </Text>
-            <Text>Body: {task.body}</Text>
-            <ScrollView style={{ maxHeight: 200 }}>
-              {/* {task.notes && (
-              <View style={styles.notesContainer}>
-                {task.notes.map((note, index) => (
-                  <View
-                    key={index}
-                    style={[
-                      styles.noteContainer,
-                      note.from === 'Office'
-                        ? styles.notesContainerOther
-                        : styles.notesContainerEmployee,
-                    ]}
-                  >
-                    <Text style={styles.noteFrom}>From: {note.from === "Office" ? "Office" : findNameById(note.from, people, crews)}</Text>
-                    <Text style={styles.noteDate}>
-                      Date: {moment(note.date).format('DD MMM hh:mm a')}
-                    </Text>
-                    <Text>{note.body}</Text>
-                  </View>
-                ))}
+          <View key={task._id.toString()} style={TaskStyles.taskContainer}>
+            <View
+              style={[
+                TaskStyles.taskSubjectContainer,
+                { backgroundColor: getPriorityColor(task.priority) },
+              ]}>
+              <Text style={TaskStyles.subject}>Subject: {task.subject}</Text>
+            </View>
+            <View
+              style={{
+                paddingBottom: 16,
+                paddingLeft: 16,
+                paddingRight: 16,
+                borderRadius: 8,
+              }}>
+              <View style={{ paddingBottom: 8 }}>
+                <Text>Attn: {findNamesByIds(task.to, people, crews)}</Text>
               </View>
-            )} */}
-              <View
-                style={[
-                  styles.noteContainer,
-                  latestMessage.from === 'Office'
-                    ? styles.notesContainerOther
-                    : styles.notesContainerEmployee,
-                ]}>
-                <Text style={styles.noteFrom}>
+              <View style={[TaskStyles.notesContainerOther, { padding: 8, borderRadius: 8 }]}>
+                <Text style={TaskStyles.noteFrom}>
                   From:{' '}
-                  {latestMessage.from === 'Office'
+                  {task.from === 'Office'
                     ? 'Office'
-                    : findNameById(latestMessage.from, people, crews)}
+                    : findNameById(task.from?.toString(), people, crews)}
                 </Text>
-                <Text style={styles.noteDate}>Date: {latestMessage.date?.toDateString()}</Text>
-                <Text>{latestMessage.body}</Text>
+                <Text style={TaskStyles.noteDate}>
+                  Date: {format(new Date(task.date), 'MMMM do yyyy, h:mm:ss a')}
+                </Text>
+
+                <Text style={[]}>{task.body}</Text>
               </View>
-            </ScrollView>
-            <TouchableOpacity style={styles.editButton} onPress={() => handleTaskEdit(task)}>
-              <Text style={styles.editButtonText}>Edit</Text>
-            </TouchableOpacity>
+
+              <>
+                <ScrollView style={{ maxHeight: 200 }}>
+                  {latestMessage && (
+                    <View
+                      style={[
+                        TaskStyles.noteContainer,
+                        latestMessage.from === 'Office'
+                          ? TaskStyles.notesContainerOther
+                          : TaskStyles.notesContainerEmployee,
+                      ]}>
+                      <Text style={TaskStyles.noteFrom}>
+                        From:{' '}
+                        {latestMessage.from === 'Office'
+                          ? 'Office'
+                          : findNameById(latestMessage.from, people, crews)}
+                      </Text>
+                      <Text style={TaskStyles.noteDate}>
+                        Date: {latestMessage.date?.toDateString()}
+                      </Text>
+                      <Text>{latestMessage.body}</Text>
+                    </View>
+                  )}
+                </ScrollView>
+              </>
+              <TouchableOpacity style={TaskStyles.editButton} onPress={() => handleTaskEdit(task)}>
+                <Text style={TaskStyles.editButtonText}>Edit/Reply</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         );
       })}
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    paddingTop: 40,
-    padding: 16,
-  },
-  taskContainer: {
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 16,
-    borderRadius: 8,
-  },
-  subject: {
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  notesContainer: {
-    marginTop: 8,
-  },
-
-  noteContainer: {
-    marginTop: 8,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 8,
-    borderRadius: 8,
-    width: 200,
-    alignSelf: 'flex-start',
-  },
-  notesContainerOther: {
-    alignSelf: 'flex-start', // Align to the right if not 'Employee'
-    backgroundColor: '#b9bdba',
-  },
-  notesContainerEmployee: {
-    alignSelf: 'flex-end', // Align to the left if 'Employee'
-    backgroundColor: '#accefa',
-  },
-  noteFrom: {
-    fontWeight: 'bold',
-  },
-  noteDate: {
-    fontStyle: 'italic',
-    fontSize: 12,
-    marginBottom: 4,
-  },
-  editButton: {
-    marginTop: 8,
-    backgroundColor: 'blue',
-    padding: 8,
-    borderRadius: 4,
-    alignItems: 'center',
-  },
-  editButtonText: {
-    color: 'white',
-  },
-});
 
 // Helper function to get priority color
 const getPriorityColor = (priority: any) => {

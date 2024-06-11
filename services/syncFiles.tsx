@@ -1,6 +1,5 @@
-import * as FileSystem from "expo-file-system";
-import * as SecureStore from "expo-secure-store";
-import { useApp } from '@realm/react';
+import * as FileSystem from 'expo-file-system';
+import * as SecureStore from 'expo-secure-store';
 
 const ip = 'http://192.168.1.12:3001';
 
@@ -99,9 +98,7 @@ const syncFiles = async (app: any) => {
         const fileDataExists = filesData.some((fileData: any) => {
           const dataFileName = getFileNameWithoutExtension(fileData.name);
           const dataFileExtension = getFileExtension(fileData.name);
-          return (
-            dataFileName === fileName && dataFileExtension === fileExtension
-          );
+          return dataFileName === fileName && dataFileExtension === fileExtension;
         });
         return !fileDataExists && !file.endsWith('.metadata');
       });
@@ -114,7 +111,7 @@ const syncFiles = async (app: any) => {
             FileSystem.deleteAsync(metadataFilePath),
           ]);
           console.log(`File ${file} and its metadata removed successfully`);
-        })
+        }),
       );
 
       return true;
@@ -151,13 +148,9 @@ async function readMetadata(metadataFilePath: string) {
 }
 
 async function writeMetadata(metadataFilePath: string, metadata: any) {
-  await FileSystem.writeAsStringAsync(
-    metadataFilePath,
-    JSON.stringify(metadata),
-    {
-      encoding: FileSystem.EncodingType.UTF8,
-    }
-  );
+  await FileSystem.writeAsStringAsync(metadataFilePath, JSON.stringify(metadata), {
+    encoding: FileSystem.EncodingType.UTF8,
+  });
 }
 
 export default syncFiles;

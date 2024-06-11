@@ -1,4 +1,4 @@
-import {StyleSheet, Dimensions} from 'react-native'
+import { Dimensions, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   sectionContainer: {
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 12,
     paddingHorizontal: 20,
-    maxWidth: 150,
+    width: 150,
   },
   buttonText: {
     fontSize: 16,
@@ -398,7 +398,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     //backgroundColor: '#7fb6a3',
     color: '#241c23',
-    borderColor: '#888',
+    borderColor: 'black',
   },
   buttonContainerDark: {
     backgroundColor: '#1d1d1d',
@@ -504,7 +504,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: 20,
-    paddingBottom: 50,
+    paddingBottom: 20,
   },
   logoContainer: {
     alignItems: 'center',
@@ -658,6 +658,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 20,
   },
-})
+});
 
-export default styles
+export default styles;

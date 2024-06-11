@@ -1,142 +1,118 @@
-import React, {useState, useEffect, useRef} from 'react'
+import { useApp } from '@realm/react';
+import React, { useState } from 'react';
 import {
-  View,
-  TextInput,
-  Button,
-  Text,
-  useColorScheme,
-  TouchableOpacity,
   Alert,
   Image,
-  ScrollView,
-  KeyboardAvoidingView,
   Modal,
   Pressable,
-} from 'react-native'
-import styles from '../constants/Styles'
-import Realm from 'realm'
-import {useApp} from '@realm/react'
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  useColorScheme,
+} from 'react-native';
+import Realm from 'realm';
+import styles from '../constants/Styles';
 
 const LoginTab = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [isResetModalVisible, setResetVisible] = useState(false)
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isResetModalVisible, setResetVisible] = useState(false);
+  const [email, setEmail] = useState('');
 
-  const app = useApp()
+  const app = useApp();
 
   const handleSubmit = async () => {
     try {
-      await app.logIn(
-        Realm.Credentials.emailPassword(username, password),
-      )
+      await app.logIn(Realm.Credentials.emailPassword(username, password));
     } catch (error) {
-      Alert.alert(
-        'Login failed',
-        'Invalid username or password. Please try again.',
-      )
+      Alert.alert('Login failed', 'Invalid username or password. Please try again.');
     }
-  }
+  };
 
   const handleResetSubmit = async () => {
     //try {
     await app.emailPasswordAuth
-      .sendResetPasswordEmail({email: email.trim().toLocaleLowerCase()})
+      .sendResetPasswordEmail({ email: email.trim().toLocaleLowerCase() })
       .then(() => {
         Alert.alert(
           'Password Reset Sent',
           'Check your email for instructions on resetting your password.',
-        )
+        );
 
-        setResetVisible(false)
+        setResetVisible(false);
       })
       .catch((error) => {
-        Alert.alert(
-          'Error Occurred',
-          'Email is invalid or does not have an account.',
-        )
-        setResetVisible(false)
-        console.error('Error occurred during password reset:', error)
-      })
+        Alert.alert('Error Occurred', 'Email is invalid or does not have an account.');
+        setResetVisible(false);
+        console.error('Error occurred during password reset:', error);
+      });
 
     //} catch (error) {
     // Alert.alert('Error Occurred', 'Email is invalid or does not have an account.');
     //setResetVisible(false);
     //console.error('Error occurred during password reset:', error);
     //}
-  }
+  };
 
   const forgotPassword = () => {
-    setResetVisible(true)
-  }
+    setResetVisible(true);
+  };
 
   const handleUsernameChange = (text: string) => {
-    setUsername(text)
-  }
+    setUsername(text);
+  };
 
   const handlePasswordChange = (text: string) => {
-    setPassword(text)
-  }
+    setPassword(text);
+  };
 
   const handleForgotChange = (text: string) => {
-    setEmail(text)
-  }
+    setEmail(text);
+  };
 
   const closeResetModal = () => {
-    setResetVisible(false)
-  }
+    setResetVisible(false);
+  };
 
-  const colorScheme = useColorScheme()
-  const isDarkMode = colorScheme === 'dark'
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === 'dark';
 
   return (
-    <View
-      style={[
-        styles.container,
-        isDarkMode ? styles.containerDark : styles.containerLight,
-      ]}
-    >
+    <View style={[styles.container, isDarkMode ? styles.containerDark : styles.containerLight]}>
       <ScrollView
         contentContainerStyle={[
           styles.containerScroll,
           isDarkMode ? styles.containerDark : styles.containerLight,
         ]}
         style={[
-          {flex: 1, maxHeight: '100%'},
+          { flex: 1, maxHeight: '100%' },
           isDarkMode ? styles.containerDark : styles.containerLight,
-        ]}
-      >
+        ]}>
         <View style={styles.loginContainer}>
           <Image
-            style={{width: 200, height: 200}}
+            style={{ width: 200, height: 200 }}
             source={require('../assets/images/logo.png')}
           />
           <View style={styles.loginPaddingContainer}>
             <View style={styles.textInputContainer}>
               <TextInput
-                style={[
-                  styles.loginInput,
-                  isDarkMode ? styles.inputDark : styles.inputLight,
-                ]}
-                onChangeText={(text) =>
-                  handleUsernameChange(text.toLowerCase())
-                }
-                placeholder='Email'
-                placeholderTextColor='grey'
+                style={[styles.loginInput, isDarkMode ? styles.inputDark : styles.inputLight]}
+                onChangeText={(text) => handleUsernameChange(text.toLowerCase())}
+                placeholder="Email"
+                placeholderTextColor="grey"
                 value={username}
-                autoCapitalize='none'
+                autoCapitalize="none"
               />
             </View>
             <View style={styles.textInputContainer}>
               <TextInput
-                style={[
-                  styles.loginInput,
-                  isDarkMode ? styles.inputDark : styles.inputLight,
-                ]}
+                style={[styles.loginInput, isDarkMode ? styles.inputDark : styles.inputLight]}
                 onChangeText={handlePasswordChange}
                 value={password}
-                placeholder='Password'
-                placeholderTextColor='grey'
+                placeholder="Password"
+                placeholderTextColor="grey"
                 secureTextEntry
               />
             </View>
@@ -148,56 +124,36 @@ const LoginTab = () => {
               /* isDarkMode ? styles.buttonContainerDark : styles.buttonContainerLight */
               ,
             ]}
-            onPress={forgotPassword}
-          >
-            <Text
-              style={[
-                styles.forgotPassBtn,
-                isDarkMode ? styles.textDark : styles.textLight,
-              ]}
-            >
+            onPress={forgotPassword}>
+            <Text style={[styles.forgotPassBtn, isDarkMode ? styles.textDark : styles.textLight]}>
               Forgot password?
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles.loginButtonContainer,
-              isDarkMode
-                ? styles.buttonContainerDark
-                : styles.buttonContainerLight,
+              isDarkMode ? styles.buttonContainerDark : styles.buttonContainerLight,
             ]}
-            onPress={handleSubmit}
-          >
-            <Text
-              style={[
-                styles.loginButtonText,
-                {color: isDarkMode ? 'white' : '#e7f0ed'},
-              ]}
-            >
+            onPress={handleSubmit}>
+            <Text style={[styles.loginButtonText, { color: isDarkMode ? 'white' : '#e7f0ed' }]}>
               Login
             </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
 
-      <Modal
-        visible={isResetModalVisible}
-        onRequestClose={closeResetModal}
-        transparent
-      >
+      <Modal visible={isResetModalVisible} onRequestClose={closeResetModal} transparent>
         <View style={[styles.formModalContainer]}>
           <View
             style={[
               styles.modalHeader,
               isDarkMode ? styles.modalHeaderDark : styles.modalHeaderLight,
-            ]}
-          >
+            ]}>
             <Text
               style={[
                 styles.modalHeadingText,
                 isDarkMode ? styles.textInputDark : styles.textInputLight,
-              ]}
-            >
+              ]}>
               Forgot Password
             </Text>
           </View>
@@ -205,8 +161,7 @@ const LoginTab = () => {
             style={[
               styles.modalView,
               isDarkMode ? styles.containerDark : styles.loginContainerLight,
-            ]}
-          >
+            ]}>
             <ScrollView>
               {/* <Text
                 style={[
@@ -223,10 +178,10 @@ const LoginTab = () => {
                   styles.textInput,
                   isDarkMode ? styles.inputDark : styles.inputLight,
                 ]}
-                placeholder='Email Address'
+                placeholder="Email Address"
                 onChangeText={(text) => handleForgotChange(text.toLowerCase())}
                 placeholderTextColor={isDarkMode ? 'white' : 'grey'}
-                autoCapitalize='none'
+                autoCapitalize="none"
               />
             </ScrollView>
             <View style={styles.buttonContainer1}>
@@ -234,18 +189,14 @@ const LoginTab = () => {
                 style={[
                   styles.button,
                   styles.buttonClose,
-                  isDarkMode
-                    ? styles.buttonBackgroundDark
-                    : styles.buttonBackgroundLight,
+                  isDarkMode ? styles.buttonBackgroundDark : styles.buttonBackgroundLight,
                 ]}
-                onPress={closeResetModal}
-              >
+                onPress={closeResetModal}>
                 <Text
                   style={[
                     styles.textClose,
                     isDarkMode ? styles.textInputDark : styles.textButtonLight,
-                  ]}
-                >
+                  ]}>
                   Close
                 </Text>
               </Pressable>
@@ -253,18 +204,14 @@ const LoginTab = () => {
                 style={[
                   styles.button,
                   styles.buttonClose,
-                  isDarkMode
-                    ? styles.buttonBackgroundDark
-                    : styles.buttonBackgroundLight,
+                  isDarkMode ? styles.buttonBackgroundDark : styles.buttonBackgroundLight,
                 ]}
-                onPress={handleResetSubmit}
-              >
+                onPress={handleResetSubmit}>
                 <Text
                   style={[
                     styles.textSubmit,
                     isDarkMode ? styles.textInputDark : styles.textButtonLight,
-                  ]}
-                >
+                  ]}>
                   Send Reset Link
                 </Text>
               </Pressable>
@@ -273,7 +220,7 @@ const LoginTab = () => {
         </View>
       </Modal>
     </View>
-  )
-}
+  );
+};
 
-export default LoginTab
+export default LoginTab;

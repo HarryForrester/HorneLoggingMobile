@@ -1,9 +1,8 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { Tabs } from 'expo-router';
+import React from 'react';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -23,8 +22,8 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen 
-        name='jobs'
+      <Tabs.Screen
+        name="jobs"
         options={{
           title: 'Jobs',
           tabBarIcon: ({ color, focused }) => (
@@ -32,8 +31,8 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen 
-        name='docs'
+      <Tabs.Screen
+        name="docs"
         options={{
           title: 'Docs',
           tabBarIcon: ({ color, focused }) => (
@@ -41,8 +40,8 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen 
-        name='forms'
+      <Tabs.Screen
+        name="forms"
         options={{
           title: 'Forms',
           tabBarIcon: ({ color, focused }) => (
@@ -50,10 +49,20 @@ export default function TabLayout() {
           ),
         }}
       />
+
       <Tabs.Screen
-        name="explore"
+        name="tasks"
         options={{
-          title: 'Explore',
+          title: 'Tasks',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="people"
+        options={{
+          title: 'People',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
           ),

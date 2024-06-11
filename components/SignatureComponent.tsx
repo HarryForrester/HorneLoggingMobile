@@ -1,67 +1,47 @@
-import React, {useRef, useState} from 'react'
-import {Button, Modal, StyleSheet, View, Image} from 'react-native'
-import SignatureScreen, {SignatureViewRef} from 'react-native-signature-canvas'
+import React, { useRef, useState } from 'react';
+import { Button, Image, Modal, StyleSheet, View } from 'react-native';
+import SignatureScreen, { SignatureViewRef } from 'react-native-signature-canvas';
 
 interface Props {
-  text: string
-  defaultValue: string
-  onOK: (signature: any) => void
+  text: string;
+  value: string;
+  onOK: (signature: any) => void;
 }
 
-const Sign: React.FC<Props> = ({text, defaultValue, onOK}) => {
-  const ref = useRef<SignatureViewRef>(null)
-  const [isModalVisible, setModalVisible] = useState(false)
-  const [signature, setSignature] = useState<any>(defaultValue)
+const Sign: React.FC<Props> = ({ text, value: signature, onOK }) => {
+  const ref = useRef<SignatureViewRef>(null);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const handleOK = (signature: any) => {
-    onOK(signature)
-    setModalVisible(false)
-    setSignature(signature) // Store the captured signature
-  }
+    onOK(signature);
+    setModalVisible(false);
+  };
 
   const handleClear = () => {
-    console.log('clear success!')
-    ref.current?.clearSignature()
-    setSignature(null) // Clear the stored signature
-  }
+    console.log('clear success!');
+    ref.current?.clearSignature();
+    onOK(null);
+  };
 
   const handleOpenModal = () => {
-    setModalVisible(true)
-  }
-
-  const handleCloseModal = () => {
-    setModalVisible(false)
-  }
-
-  const style = `.m-signature-pad--footer {display: none; margin: 0px;}`
+    setModalVisible(true);
+  };
 
   return (
     <View style={styles.container}>
-      {signature ? (
-        <Image source={{uri: signature}} style={styles.signatureImage} />
-      ) : null}
+      {signature ? <Image source={{ uri: signature }} style={styles.signatureImage} /> : null}
       {!signature && (
-        <Button
-          color={'#0c3424'}
-          title='Add Signature'
-          onPress={handleOpenModal}
-        ></Button>
+        <Button color={'#0c3424'} title="Add Signature" onPress={handleOpenModal}></Button>
       )}
-      {signature && (
-        <Button
-          color={'#0c3424'}
-          title='Remove Signature'
-          onPress={handleClear}
-        />
-      )}
-      <Modal visible={isModalVisible} animationType='slide'>
+      {signature && <Button color={'#0c3424'} title="Remove Signature" onPress={handleClear} />}
+      <Modal visible={isModalVisible} animationType="slide">
         <View style={styles.modalContainer}>
           <SignatureScreen ref={ref} onOK={handleOK} />
         </View>
       </Modal>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -83,6 +63,6 @@ const styles = StyleSheet.create({
     height: 100,
     marginBottom: 10,
   },
-})
+});
 
-export default Sign
+export default Sign;

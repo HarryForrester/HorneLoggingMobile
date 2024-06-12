@@ -1,5 +1,6 @@
 import FormModal from '@/components/Modals/FormModal';
 import { useApp, useQuery, useUser } from '@realm/react';
+import { useNavigation } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, TouchableHighlight, View, useColorScheme } from 'react-native';
@@ -35,6 +36,12 @@ const FormTab = () => {
 
   const app = useApp();
   const user = useUser();
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({ headerShown: true });
+  }, [navigation]);
 
   /*   useEffect(() => {
     loadSelectedForm();

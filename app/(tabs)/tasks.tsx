@@ -1,7 +1,8 @@
 import TaskStyles from '@/constants/TaskStyles';
 import { useQuery, useUser } from '@realm/react';
 import { format } from 'date-fns';
-import React, { useState } from 'react';
+import { useNavigation } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import EditTaskModal from '../../components/Modals/EditTaskModal';
 import { Crew } from '../../schemas/Crew';
@@ -27,6 +28,12 @@ function TasksTab() {
     .reverse();
   const crews = useQuery(Crew);
   const people = useQuery(People);
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({ headerShown: true });
+  }, [navigation]);
 
   return (
     <ScrollView contentContainerStyle={TaskStyles.container}>

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SectionList, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
 import styles from '../../constants/Styles';
 //import RNFS from 'react-native-fs'
 import handleDocumentPress from '@/utils/documentFunctions';
 import { useApp, useQuery } from '@realm/react';
+import { useNavigation } from 'expo-router';
 import LibraryFile from '../../schemas/LibraryFile';
 //import FileViewer from 'react-native-file-viewer'
 
@@ -27,6 +28,12 @@ function DocsTab() {
     title: group,
     data: groupedFiles[group],
   }));
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({ headerShown: true });
+  }, [navigation]);
 
   return (
     <View style={[styles.settingsContainer, isDarkMode ? styles.darkmode : styles.normal]}>

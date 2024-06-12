@@ -1,12 +1,31 @@
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useUser } from '@realm/react';
 import { Tabs } from 'expo-router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const [accessLevelAdmin, setAccessLevelAdmin] = useState<null | string>(null);
+  const [accessLevelForeman, setAccessLevelForeman] = useState<null | string>(null);
 
+  const user = useUser();
+  const href = accessLevelAdmin === 'on' || accessLevelForeman === 'on' ? undefined : null;
+
+  useEffect(() => {
+    console.log('devieeeeeee', user.customData.device);
+    if (user.customData.device === JSON.stringify({ accessLevelAdmin: 'on' })) {
+      setAccessLevelAdmin('on');
+      setAccessLevelForeman('off');
+    } else if (user.customData.device === JSON.stringify({ accessLevelForeman: 'on' })) {
+      setAccessLevelForeman('on');
+      setAccessLevelAdmin('off');
+    } else {
+      setAccessLevelForeman('off');
+      setAccessLevelAdmin('off');
+    }
+  }, []);
   return (
     <Tabs
       screenOptions={{
@@ -34,6 +53,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="docs"
         options={{
+          href: null,
           title: 'Docs',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'documents' : 'documents-outline'} color={color} />
@@ -62,7 +82,18 @@ export default function TabLayout() {
       <Tabs.Screen
         name="people"
         options={{
+          href: null,
           title: 'People',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          href: null,
+          title: 'Settings',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
           ),

@@ -36,7 +36,7 @@ function DocsTab() {
   }, [navigation]);
 
   return (
-    <View style={[styles.settingsContainer, isDarkMode ? styles.darkmode : styles.normal]}>
+    <View style={[styles.settingsContainer, isDarkMode ? styles.darkmode : styles.lightBackground]}>
       <View style={{ flex: 1, maxHeight: '90%' }}>
         <SectionList
           sections={sections}

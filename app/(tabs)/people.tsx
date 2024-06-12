@@ -141,7 +141,7 @@ function PeopleScreen() {
       <View
         style={[
           { flex: 1, justifyContent: 'center', alignItems: 'center' },
-          isDarkMode ? styles.darkmode : styles.normal,
+          isDarkMode ? styles.darkmode : styles.lightBackground,
         ]}>
         <ActivityIndicator size="large" color="#241c23" />
         <Text style={darkMode}>Loading data...</Text>
@@ -150,7 +150,7 @@ function PeopleScreen() {
   }
 
   return (
-    <View style={[isDarkMode ? styles.darkmode : styles.normal, { flex: 1 }]}>
+    <View style={[isDarkMode ? styles.darkmode : styles.lightBackground, { flex: 1 }]}>
       <SectionList
         style={{ marginTop: 25 }}
         sections={peopleByCrew}
@@ -192,13 +192,13 @@ function PeopleScreen() {
             <Text
               style={[
                 styles.modalHeadingText,
-                isDarkMode ? styles.textInputDark : styles.textInputLight,
+                isDarkMode ? styles.textInputDark : styles.headerBackgroundTextInputLight,
               ]}>
               {selectedPerson?.name}
             </Text>
           </View>
 
-          <View style={[styles.modalView, isDarkMode ? styles.darkmode : styles.normal]}>
+          <View style={[styles.modalView, isDarkMode ? styles.darkmode : styles.lightBackground]}>
             <ScrollView>
               <View style={{ padding: 10 }}>
                 <View style={styles.personDetailRow}>

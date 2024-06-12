@@ -10,7 +10,7 @@ export default function HomeScreen() {
 
   return (
     <PaperProvider>
-      <View style={[Homestyles.container, isDarkMode ? styles.darkmode : styles.normal]}>
+      <View style={[Homestyles.container, isDarkMode ? styles.darkmode : styles.lightBackground]}>
         <Text style={Homestyles.title}>Horne Logging</Text>
         <View style={Homestyles.buttonContainer}>
           <Button

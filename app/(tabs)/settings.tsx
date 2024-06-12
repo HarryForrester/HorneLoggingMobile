@@ -152,10 +152,10 @@ function SettingsScreen() {
       <View
         style={[
           { flex: 1, justifyContent: 'center', alignItems: 'center' },
-          isDarkMode ? styles.darkmode : styles.normal,
+          isDarkMode ? styles.darkmode : styles.lightBackground,
         ]}>
         <ActivityIndicator size="large" color="green" />
-        <Text style={isDarkMode ? styles.textInputDark : styles.textInputLight}>
+        <Text style={isDarkMode ? styles.textInputDark : styles.headerBackgroundTextInputLight}>
           Loading data...
         </Text>
       </View>
@@ -163,7 +163,11 @@ function SettingsScreen() {
   }
 
   return (
-    <View style={[styles.containerSettingScreen, isDarkMode ? styles.darkmode : styles.normal]}>
+    <View
+      style={[
+        styles.containerSettingScreen,
+        isDarkMode ? styles.darkmode : styles.lightBackground,
+      ]}>
       <View style={styles.settingsContainerScreen}>
         <View style={styles.personImageContainer}>
           <Image style={styles.personSettingsImage} source={{ uri: `file://${personImage}` }} />

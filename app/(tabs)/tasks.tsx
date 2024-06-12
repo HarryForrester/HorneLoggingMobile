@@ -40,7 +40,7 @@ function TasksTab() {
   }, [navigation]);
 
   return (
-    <View style={isDarkMode ? styles.darkmode : styles.normal}>
+    <View style={isDarkMode ? styles.darkmode : styles.lightBackground}>
       <ScrollView contentContainerStyle={TaskStyles.container}>
         {isEditTaskModalVisible && (
           <EditTaskModal

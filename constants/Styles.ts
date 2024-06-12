@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loginPaddingContainer: {
-    paddingTop: 50,
+    paddingTop: 40,
   },
   loginButtonContainer: {
     marginTop: 50,
@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     zIndex: 9999999, // Adjust the zIndex as needed to ensure the overlay is displayed above the modals
   },
-  normal: {
+  lightBackground: {
     backgroundColor: '#fafafa',
   },
   darkmode: {
@@ -378,7 +378,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#111',
   },
   containerLight: {
-    backgroundColor: '#e7f0ed',
+    backgroundColor: '#fafafa',
   },
   loginContainerLight: {
     backgroundColor: '#e7f0ed',
@@ -423,8 +423,8 @@ const styles = StyleSheet.create({
   textInputDark: {
     color: '#fff',
   },
-  textInputLight: {
-    color: '#e7f0ed',
+  headerBackgroundTextInputLight: {
+    color: '#fafafa',
   },
   loadingLight: {
     color: '#0c3424',
@@ -433,7 +433,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   textButtonLight: {
-    color: '#e7f0ed',
+    color: '#fafafa',
   },
   listViewDark: {
     backgroundColor: 'grey',

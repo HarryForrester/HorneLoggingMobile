@@ -277,9 +277,9 @@ const FormTab = () => {
   } */
 
   return (
-    <View style={[styles.content, isDarkMode ? styles.darkmode : styles.normal]}>
+    <View style={[styles.content, isDarkMode ? styles.darkmode : styles.lightBackground]}>
       <ScrollView contentContainerStyle={styles.containerScroll} style={{ maxHeight: '100%' }}>
-        <View style={[isDarkMode ? styles.darkmode : styles.normal]}>
+        <View style={[isDarkMode ? styles.darkmode : styles.lightBackground]}>
           {filteredTimesheet.length > 0 && (
             <View style={styles.buttonContainerForms}>
               <TouchableHighlight

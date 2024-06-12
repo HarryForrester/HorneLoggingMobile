@@ -211,7 +211,7 @@ const JobScreen = () => {
   );
 
   return (
-    <SafeAreaView style={isDarkMode ? styles.darkmode : styles.normal}>
+    <SafeAreaView style={isDarkMode ? styles.darkmode : styles.lightBackground}>
       <View style={{ marginTop: 40 }}>
         <View style={[styles.buttonContainer, isDarkMode && styles.containerDark]}>
           <View style={styles.buttonRow}>
@@ -669,7 +669,7 @@ const PDFViewer = ({
     <View>
       <View
         style={[
-          isDarkMode ? styles.darkmode : styles.normal,
+          isDarkMode ? styles.darkmode : styles.lightBackground,
           {
             flex: 1,
             position: 'relative',
@@ -692,7 +692,7 @@ const PDFViewer = ({
                 Skid {String(selectedMarker?.info.pointName)}
               </Text>
             </View>
-            <View style={[styles.modalView, isDarkMode ? styles.darkmode : styles.normal]}>
+            <View style={[styles.modalView, isDarkMode ? styles.darkmode : styles.lightBackground]}>
               <ScrollView>
                 {(accessLevelAdmin === 'on' || accessLevelForeman === 'on') && (
                   <>
@@ -852,7 +852,7 @@ const PDFViewer = ({
                 Hazards
               </Text>
             </View>
-            <View style={[styles.modalView, isDarkMode ? styles.darkmode : styles.normal]}>
+            <View style={[styles.modalView, isDarkMode ? styles.darkmode : styles.lightBackground]}>
               <ScrollView>
                 <HazardContainer hazards={selectedHazards} />
               </ScrollView>
@@ -898,7 +898,7 @@ const PDFViewer = ({
                 Crew Info
               </Text>
             </View>
-            <View style={[styles.modalView, isDarkMode ? styles.darkmode : styles.normal]}>
+            <View style={[styles.modalView, isDarkMode ? styles.darkmode : styles.lightBackground]}>
               {selectedCrewMember &&
                 Object.entries(selectedCrewMember).map(([crewName, crewMembers]) => {
                   if (crewName) {
@@ -976,7 +976,7 @@ const PDFViewer = ({
                 {selectedPerson?.name}
               </Text>
             </View>
-            <View style={[styles.modalView, isDarkMode ? styles.darkmode : styles.normal]}>
+            <View style={[styles.modalView, isDarkMode ? styles.darkmode : styles.lightBackground]}>
               <ScrollView>
                 <View style={{ padding: 10 }}>
                   <View style={styles.personDetailRow}>
@@ -1132,7 +1132,7 @@ const PDFViewer = ({
               singlePage={true}
               onError={handleLoadError}
               style={[
-                isDarkMode ? styles.darkmode : styles.normal,
+                isDarkMode ? styles.darkmode : styles.lightBackground,
                 {
                   width: Dimensions.get('window').width + 0,
                   height: Dimensions.get('window').height + 50,

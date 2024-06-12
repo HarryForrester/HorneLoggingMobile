@@ -94,7 +94,7 @@ const TimeSheetModal: React.FC<Props> = ({
             Time Sheet
           </Text>
         </View>
-        <View style={[styles.modalView, isDarkMode ? styles.darkmode : styles.normal]}>
+        <View style={[styles.modalView, isDarkMode ? styles.darkmode : styles.lightBackground]}>
           <Formik
             initialValues={{ hours: '', comments: '', selectedPerson: [] }}
             validationSchema={validationSchema}
@@ -236,7 +236,7 @@ const TimeSheetModal: React.FC<Props> = ({
                     <Text
                       style={[
                         styles.textClose,
-                        isDarkMode ? styles.textInputDark : styles.textInputLight,
+                        isDarkMode ? styles.textInputDark : styles.headerBackgroundTextInputLight,
                       ]}>
                       Close
                     </Text>
@@ -251,7 +251,7 @@ const TimeSheetModal: React.FC<Props> = ({
                     <Text
                       style={[
                         styles.textSubmit,
-                        isDarkMode ? styles.textInputDark : styles.textInputLight,
+                        isDarkMode ? styles.textInputDark : styles.headerBackgroundTextInputLight,
                       ]}>
                       Submit
                     </Text>

@@ -536,7 +536,7 @@ const FormModal: React.FC<Props> = ({
             {selectedForm?.data.title}
           </Text>
         </View>
-        <View style={[styles.modalView, isDarkMode ? styles.darkmode : styles.normal]}>
+        <View style={[styles.modalView, isDarkMode ? styles.darkmode : styles.lightBackground]}>
           <ScrollView>{selectedForm && renderFormElements()}</ScrollView>
           <View style={styles.buttonContainer1}>
             <Pressable
@@ -549,7 +549,7 @@ const FormModal: React.FC<Props> = ({
               <Text
                 style={[
                   styles.textClose,
-                  isDarkMode ? styles.textInputDark : styles.textInputLight,
+                  isDarkMode ? styles.textInputDark : styles.headerBackgroundTextInputLight,
                 ]}>
                 Close
               </Text>
@@ -564,7 +564,7 @@ const FormModal: React.FC<Props> = ({
               <Text
                 style={[
                   styles.textClose,
-                  isDarkMode ? styles.textInputDark : styles.textInputLight,
+                  isDarkMode ? styles.textInputDark : styles.headerBackgroundTextInputLight,
                 ]}>
                 Reset
               </Text>
@@ -579,7 +579,7 @@ const FormModal: React.FC<Props> = ({
               <Text
                 style={[
                   styles.textSubmit,
-                  isDarkMode ? styles.textInputDark : styles.textInputLight,
+                  isDarkMode ? styles.textInputDark : styles.headerBackgroundTextInputLight,
                 ]}>
                 Submit
               </Text>

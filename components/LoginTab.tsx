@@ -26,8 +26,8 @@ const LoginTab = () => {
   const handleSubmit = async () => {
     try {
       await app.logIn(Realm.Credentials.emailPassword(username, password));
-    } catch (error) {
-      Alert.alert('Login failed', 'Invalid username or password. Please try again.');
+    } catch (error: any) {
+      Alert.alert('Login failed', 'Invalid username or password. Please try again.', error);
     }
   };
 
@@ -80,68 +80,54 @@ const LoginTab = () => {
   const isDarkMode = colorScheme === 'dark';
 
   return (
-    <View style={[styles.container, isDarkMode ? styles.containerDark : styles.containerLight]}>
-      <ScrollView
-        contentContainerStyle={[
-          styles.containerScroll,
-          isDarkMode ? styles.containerDark : styles.containerLight,
-        ]}
-        style={[
-          { flex: 1, maxHeight: '100%' },
-          isDarkMode ? styles.containerDark : styles.containerLight,
-        ]}>
-        <View style={styles.loginContainer}>
-          <Image
-            style={{ width: 200, height: 200 }}
-            source={require('../assets/images/logo.png')}
-          />
-          <View style={styles.loginPaddingContainer}>
-            <View style={styles.textInputContainer}>
-              <TextInput
-                style={[styles.loginInput, isDarkMode ? styles.inputDark : styles.inputLight]}
-                onChangeText={(text) => handleUsernameChange(text.toLowerCase())}
-                placeholder="Email"
-                placeholderTextColor="grey"
-                value={username}
-                autoCapitalize="none"
-              />
-            </View>
-            <View style={styles.textInputContainer}>
-              <TextInput
-                style={[styles.loginInput, isDarkMode ? styles.inputDark : styles.inputLight]}
-                onChangeText={handlePasswordChange}
-                value={password}
-                placeholder="Password"
-                placeholderTextColor="grey"
-                secureTextEntry
-              />
-            </View>
+    <View style={[styles.container, isDarkMode ? styles.containerDark : styles.lightBackground]}>
+      <View style={styles.loginContainer}>
+        <Image style={{ width: 250, height: 250 }} source={require('../assets/images/logo.png')} />
+        <View style={styles.loginPaddingContainer}>
+          <View style={styles.textInputContainer}>
+            <TextInput
+              style={[styles.loginInput, isDarkMode ? styles.inputDark : styles.inputLight]}
+              onChangeText={(text) => handleUsernameChange(text.toLowerCase())}
+              placeholder="Email"
+              placeholderTextColor="grey"
+              value={username}
+              autoCapitalize="none"
+            />
           </View>
-
-          <TouchableOpacity
-            style={[
-              styles.forgotButtonContainer,
-              /* isDarkMode ? styles.buttonContainerDark : styles.buttonContainerLight */
-              ,
-            ]}
-            onPress={forgotPassword}>
-            <Text style={[styles.forgotPassBtn, isDarkMode ? styles.textDark : styles.textLight]}>
-              Forgot password?
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.loginButtonContainer,
-              isDarkMode ? styles.buttonContainerDark : styles.buttonContainerLight,
-            ]}
-            onPress={handleSubmit}>
-            <Text style={[styles.loginButtonText, { color: isDarkMode ? 'white' : '#e7f0ed' }]}>
-              Login
-            </Text>
-          </TouchableOpacity>
+          <View style={styles.textInputContainer}>
+            <TextInput
+              style={[styles.loginInput, isDarkMode ? styles.inputDark : styles.inputLight]}
+              onChangeText={handlePasswordChange}
+              value={password}
+              placeholder="Password"
+              placeholderTextColor="grey"
+              secureTextEntry
+            />
+          </View>
         </View>
-      </ScrollView>
 
+        <TouchableOpacity
+          style={[
+            styles.forgotButtonContainer,
+            /* isDarkMode ? styles.buttonContainerDark : styles.buttonContainerLight */
+            ,
+          ]}
+          onPress={forgotPassword}>
+          <Text style={[styles.forgotPassBtn, isDarkMode ? styles.textDark : styles.textLight]}>
+            Forgot password?
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.loginButtonContainer,
+            isDarkMode ? styles.buttonContainerDark : styles.buttonContainerLight,
+          ]}
+          onPress={handleSubmit}>
+          <Text style={[styles.loginButtonText, { color: isDarkMode ? 'white' : '#e7f0ed' }]}>
+            Login
+          </Text>
+        </TouchableOpacity>
+      </View>
       <Modal visible={isResetModalVisible} onRequestClose={closeResetModal} transparent>
         <View style={[styles.formModalContainer]}>
           <View
@@ -152,7 +138,7 @@ const LoginTab = () => {
             <Text
               style={[
                 styles.modalHeadingText,
-                isDarkMode ? styles.textInputDark : styles.textInputLight,
+                isDarkMode ? styles.textInputDark : styles.headerBackgroundTextInputLight,
               ]}>
               Forgot Password
             </Text>
@@ -163,22 +149,20 @@ const LoginTab = () => {
               isDarkMode ? styles.containerDark : styles.loginContainerLight,
             ]}>
             <ScrollView>
-              {/* <Text
+              <Text
                 style={[
                   styles.modalTextBold,
-                  isDarkMode ? styles.textInputDark : styles.textInputLight,
-                ]}
-              >
+                  isDarkMode ? styles.textInputDark : styles.textLight,
+                ]}>
                 Email Address
               </Text>
- */}
               <TextInput
                 style={[
                   styles.modalText,
                   styles.textInput,
                   isDarkMode ? styles.inputDark : styles.inputLight,
                 ]}
-                placeholder="Email Address"
+                placeholder="Enter Email"
                 onChangeText={(text) => handleForgotChange(text.toLowerCase())}
                 placeholderTextColor={isDarkMode ? 'white' : 'grey'}
                 autoCapitalize="none"

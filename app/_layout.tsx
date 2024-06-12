@@ -1,20 +1,19 @@
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { RealmProvider, useApp } from '@realm/react';
+import { AppProvider, RealmProvider, UserProvider, useApp } from '@realm/react';
+import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useRef } from 'react';
+import { useColorScheme } from 'react-native';
 import 'react-native-reanimated';
-
-import { AppProvider, UserProvider } from '@realm/react';
-import Constants from 'expo-constants';
 import firebaseConfig from '../firebaseConfig';
 
 import LoginTab from '@/components/LoginTab';
 import { Realm } from '@realm/react';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
+import { StatusBar } from 'expo-status-bar';
 import { initializeApp } from 'firebase/app';
 import { Platform } from 'react-native';
 import firebaseApp from '../firebaseConfig';
@@ -183,6 +182,8 @@ function useRegisterFCMToken() {
 
 function CustomThemeProvider({ children }: any) {
   const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === 'dark';
+  const statusBarBackgroundColor = isDarkMode ? '#111' : '#0c3424';
 
   useEffect(() => {
     // Any JavaScript you want to run before rendering the ThemeProvider and Stack
@@ -195,6 +196,8 @@ function CustomThemeProvider({ children }: any) {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
+      <StatusBar style="dark" backgroundColor={statusBarBackgroundColor} />
+
       {children}
     </ThemeProvider>
   );

@@ -9,7 +9,6 @@ import {
   Pressable,
   SafeAreaView,
   ScrollView,
-  StatusBar,
   Text,
   TouchableOpacity,
   View,
@@ -27,6 +26,7 @@ import * as Sharing from 'expo-sharing';
 import syncFiles from '@/services/syncFiles';
 import ReactNativeZoomableView from '@openspacelabs/react-native-zoomable-view/src/ReactNativeZoomableView';
 import { useApp, useQuery, useUser } from '@realm/react';
+import { useNavigation } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import File from '../../schemas/File';
 import GeneralHazards from '../../schemas/GeneralHazards';
@@ -84,6 +84,11 @@ const JobScreen = () => {
   const user = useUser();
   const [isLoading, setIsLoading] = useState(true); // State to track initial load
   const selectedMap = maps.find((map: any) => map._id === selectedMapId);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({ headerShown: true });
+  }, [navigation]);
 
   useEffect(() => {
     const sync = async () => {
@@ -207,7 +212,6 @@ const JobScreen = () => {
 
   return (
     <SafeAreaView style={isDarkMode ? styles.darkmode : styles.normal}>
-      <StatusBar barStyle={statusBarStyle} backgroundColor={statusBarBackgroundColor} />
       <View style={{ marginTop: 40 }}>
         <View style={[styles.buttonContainer, isDarkMode && styles.containerDark]}>
           <View style={styles.buttonRow}>

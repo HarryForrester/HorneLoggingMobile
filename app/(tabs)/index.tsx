@@ -1,70 +1,90 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-
+import styles from '@/constants/Styles';
+import { useRouter } from 'expo-router';
+import React from 'react';
+import { StyleSheet, Text, View, useColorScheme } from 'react-native';
+import { Button, Provider as PaperProvider } from 'react-native-paper';
 export default function HomeScreen() {
+  const router = useRouter();
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === 'dark';
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <PaperProvider>
+      <View style={[Homestyles.container, isDarkMode ? styles.darkmode : styles.normal]}>
+        <Text style={Homestyles.title}>Horne Logging</Text>
+        <View style={Homestyles.buttonContainer}>
+          <Button
+            buttonColor="black"
+            icon="file-document-multiple"
+            mode="contained"
+            style={Homestyles.button}
+            labelStyle={Homestyles.buttonLabel}
+            contentStyle={Homestyles.buttonContent}
+            onPress={() => router.push('/(tabs)/docs')}>
+            Docs
+          </Button>
+          <Button
+            buttonColor="black"
+            icon="account-box"
+            mode="contained"
+            style={Homestyles.button}
+            labelStyle={Homestyles.buttonLabel}
+            contentStyle={Homestyles.buttonContent}
+            onPress={() => router.push('/(tabs)/people')}>
+            People
+          </Button>
+          <Button
+            buttonColor="black"
+            icon="account-settings"
+            mode="contained"
+            style={Homestyles.button}
+            labelStyle={Homestyles.buttonLabel}
+            contentStyle={Homestyles.buttonContent}
+            onPress={() => router.push('/(tabs)/settings')}>
+            Settings
+          </Button>
+        </View>
+      </View>
+    </PaperProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+const Homestyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 8,
+    padding: 20,
+    //backgroundColor: '#f8f9fa',
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 30,
+    color: 'black',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  buttonContainer: {
+    flexDirection: 'column',
+    justifyContent: 'space-around', // Distribute space evenly between buttons vertically
+    alignItems: 'center',
+    height: '60%', // Adjust height to better distribute buttons
+    width: '100%', // Ensure full width of the screen
+  },
+  button: {
+    marginVertical: 10,
+    width: '80%', // Make buttons wider for better appearance
+    borderRadius: 25,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  buttonLabel: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  buttonContent: {
+    paddingVertical: 8,
   },
 });

@@ -17,6 +17,7 @@ import {
 import * as FileSystem from 'expo-file-system';
 
 import handleDocumentPress from '@/utils/documentFunctions';
+import { useNavigation } from 'expo-router';
 import styles from '../../constants/Styles';
 import File from '../../schemas/File';
 import People from '../../schemas/People';
@@ -48,10 +49,15 @@ function PeopleScreen() {
 
   const peopleCollection = useQuery(People);
 
-  console.log('pepleCOllection: ', peopleCollection);
   const fileCollection = useQuery(File).filter((file) => {
     return file._account === user.customData._account;
   });
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({ headerShown: true });
+  }, [navigation]);
 
   useEffect(() => {
     if (user.customData.device === JSON.stringify({ accessLevelAdmin: 'on' })) {
@@ -75,13 +81,17 @@ function PeopleScreen() {
         const filteredPeople = peopleCollection.filter((person) => {
           return person._account === user.customData._account;
         });
+        console.log(
+          'filteredPeople',
+          filteredPeople.map((a) => a._account),
+        );
         //const currentEmail = await SInfo.getItem('currentEmai', {});
         const crews: { [crewName: string]: Person[] } = {};
         const currentCrew = user.customData.crew;
 
         filteredPeople.forEach((item: any) => {
           const crewName = item.crew;
-          if (crewName === currentCrew) {
+          if (accessLevelAdmin === 'on' || crewName === currentCrew) {
             if (!crews.hasOwnProperty(crewName)) {
               crews[crewName] = [];
             }
@@ -93,7 +103,10 @@ function PeopleScreen() {
           title: crewName,
           data: crews[crewName],
         }));
-
+        console.log(
+          'peopleByCrewList',
+          peopleByCrewList.map((n) => n.title),
+        );
         setPeopleByCrew(peopleByCrewList);
       } catch (err) {
         console.error('Error has occurred getting people.json', err);
@@ -125,7 +138,11 @@ function PeopleScreen() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View
+        style={[
+          { flex: 1, justifyContent: 'center', alignItems: 'center' },
+          isDarkMode ? styles.darkmode : styles.normal,
+        ]}>
         <ActivityIndicator size="large" color="#241c23" />
         <Text style={darkMode}>Loading data...</Text>
       </View>
@@ -133,8 +150,9 @@ function PeopleScreen() {
   }
 
   return (
-    <View style={[{ backgroundColor: colorScheme === 'dark' ? '#111' : '#e7f0ed' }, { flex: 1 }]}>
+    <View style={[isDarkMode ? styles.darkmode : styles.normal, { flex: 1 }]}>
       <SectionList
+        style={{ marginTop: 25 }}
         sections={peopleByCrew}
         renderItem={({ item }) => (
           <TouchableOpacity

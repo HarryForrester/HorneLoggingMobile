@@ -1,23 +1,25 @@
+import styles from '@/constants/Styles';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, useColorScheme } from 'react-native';
 import { Button, Provider as PaperProvider } from 'react-native-paper';
-
 export default function HomeScreen() {
   const router = useRouter();
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === 'dark';
 
   return (
     <PaperProvider>
-      <View style={styles.container}>
-        <Text style={styles.title}>Horne Logging</Text>
-        <View style={styles.buttonContainer}>
+      <View style={[Homestyles.container, isDarkMode ? styles.darkmode : styles.normal]}>
+        <Text style={Homestyles.title}>Horne Logging</Text>
+        <View style={Homestyles.buttonContainer}>
           <Button
             buttonColor="black"
             icon="file-document-multiple"
             mode="contained"
-            style={styles.button}
-            labelStyle={styles.buttonLabel}
-            contentStyle={styles.buttonContent}
+            style={Homestyles.button}
+            labelStyle={Homestyles.buttonLabel}
+            contentStyle={Homestyles.buttonContent}
             onPress={() => router.push('/(tabs)/docs')}>
             Docs
           </Button>
@@ -25,9 +27,9 @@ export default function HomeScreen() {
             buttonColor="black"
             icon="account-box"
             mode="contained"
-            style={styles.button}
-            labelStyle={styles.buttonLabel}
-            contentStyle={styles.buttonContent}
+            style={Homestyles.button}
+            labelStyle={Homestyles.buttonLabel}
+            contentStyle={Homestyles.buttonContent}
             onPress={() => router.push('/(tabs)/people')}>
             People
           </Button>
@@ -35,9 +37,9 @@ export default function HomeScreen() {
             buttonColor="black"
             icon="account-settings"
             mode="contained"
-            style={styles.button}
-            labelStyle={styles.buttonLabel}
-            contentStyle={styles.buttonContent}
+            style={Homestyles.button}
+            labelStyle={Homestyles.buttonLabel}
+            contentStyle={Homestyles.buttonContent}
             onPress={() => router.push('/(tabs)/settings')}>
             Settings
           </Button>
@@ -47,13 +49,13 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const Homestyles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#f8f9fa',
+    //backgroundColor: '#f8f9fa',
   },
   title: {
     fontSize: 28,

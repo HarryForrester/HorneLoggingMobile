@@ -369,7 +369,7 @@ const styles = StyleSheet.create({
     zIndex: 9999999, // Adjust the zIndex as needed to ensure the overlay is displayed above the modals
   },
   normal: {
-    //backgroundColor: '#e7f0ed',
+    backgroundColor: '#fafafa',
   },
   darkmode: {
     backgroundColor: '#111',

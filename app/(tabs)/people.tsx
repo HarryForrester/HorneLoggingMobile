@@ -138,7 +138,11 @@ function PeopleScreen() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View
+        style={[
+          { flex: 1, justifyContent: 'center', alignItems: 'center' },
+          isDarkMode ? styles.darkmode : styles.normal,
+        ]}>
         <ActivityIndicator size="large" color="#241c23" />
         <Text style={darkMode}>Loading data...</Text>
       </View>
@@ -146,7 +150,7 @@ function PeopleScreen() {
   }
 
   return (
-    <View style={[{ backgroundColor: colorScheme === 'dark' ? '#111' : '#e7f0ed' }, { flex: 1 }]}>
+    <View style={[isDarkMode ? styles.darkmode : styles.normal, { flex: 1 }]}>
       <SectionList
         style={{ marginTop: 25 }}
         sections={peopleByCrew}

@@ -287,7 +287,7 @@ const PDFViewer = ({
   const [accessLevelAdmin, setAccessLevelAdmin] = useState<any>('off');
   const [accessLevelForeman, setAccessLevelForeman] = useState<any>('off');
 
-  const [selectedImage, setSelectedImage] = useState<any>([]);
+  const [selectedImage, setSelectedImage] = useState<any>(null);
   const [siteHazards, setSiteHazards] = useState<any>(null);
   const [cutPlans, setCutPlans] = useState<any>(null);
   const [retryCount, setRetryCount] = useState(0);
@@ -300,6 +300,7 @@ const PDFViewer = ({
 
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
+  const defaultProfileImage = require('../../assets/images/defaultprofile.png');
 
   const maxRetryCount = 5; // Maximum number of retry attempts
   const retryInterval = 3000; // Retry every 3 seconds (adjust as needed)
@@ -627,8 +628,13 @@ const PDFViewer = ({
       );
       const folderPath = `${FileSystem.documentDirectory}/files`;
       const filePath = `${folderPath}${crewMemberData[0].imgUrl}`;
-
-      setSelectedImage(filePath);
+      const imageUrl = crewMemberData[0].imgUrl;
+      console.log('this si the file path for the image bnro ,auy', filePath);
+      if (imageUrl === '/img/default.jpg') {
+        setSelectedImage(null);
+      } else {
+        setSelectedImage(filePath);
+      }
       setSelectedPerson(crewMemberData[0]);
       setSelectedFile(filesForCrewMember);
       setCrewPersonShowModal(true);
@@ -983,18 +989,22 @@ const PDFViewer = ({
                     <View style={styles.personImageContainer}>
                       <Image
                         style={styles.personImage}
-                        source={{ uri: `file://${selectedImage}` }}
+                        source={
+                          selectedImage ? { uri: `file://${selectedImage}` } : defaultProfileImage
+                        }
                       />
                     </View>
                   </View>
                   <View style={styles.personDetailRow}>
                     <Text style={[styles.personDetailLabel, darkMode]}>Role:</Text>
-                    <Text style={[styles.personDetailValue, darkMode]}>{selectedPerson?.role}</Text>
+                    <Text style={[styles.personDetailValue, darkMode]}>
+                      {selectedPerson?.role || 'N/A'}
+                    </Text>
                   </View>
                   <View style={styles.personDetailRow}>
                     <Text style={[styles.personDetailLabel, darkMode]}>Address:</Text>
                     <Text style={[styles.personDetailValue, darkMode]}>
-                      {selectedPerson?.address}
+                      {selectedPerson?.address || 'N/A'}
                     </Text>
                   </View>
                   <View style={styles.personDetailRow}>
@@ -1002,14 +1012,14 @@ const PDFViewer = ({
                     <TouchableOpacity
                       onPress={() => Linking.openURL(`tel:${selectedPerson?.phone}`)}>
                       <Text style={[styles.personDetailValue, darkMode]}>
-                        {selectedPerson?.phone}
+                        {selectedPerson?.phone || 'N/A'}
                       </Text>
                     </TouchableOpacity>
                   </View>
                   <View style={styles.personDetailRow}>
                     <Text style={[styles.personDetailLabel, darkMode]}>Alt Contact:</Text>
                     <Text style={[styles.personDetailValue, darkMode]}>
-                      {selectedPerson?.contact}
+                      {selectedPerson?.contact || 'N/A'}
                     </Text>
                   </View>
                   <View style={styles.personDetailRow}>
@@ -1017,7 +1027,7 @@ const PDFViewer = ({
                     <TouchableOpacity
                       onPress={() => Linking.openURL(`tel:${selectedPerson?.contactphone}`)}>
                       <Text style={[styles.personDetailValue, darkMode]}>
-                        {selectedPerson?.contactphone}
+                        {selectedPerson?.contactphone || 'N/A'}
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -1026,7 +1036,7 @@ const PDFViewer = ({
                     <View style={styles.personDetailRow}>
                       <Text style={[styles.personDetailLabel, darkMode]}>DOB:</Text>
                       <Text style={[styles.personDetailValue, darkMode]}>
-                        {selectedPerson?.dob}
+                        {selectedPerson?.dob || 'N/A'}
                       </Text>
                     </View>
                   )}
@@ -1034,7 +1044,7 @@ const PDFViewer = ({
                     <View style={styles.personDetailRow}>
                       <Text style={[styles.personDetailLabel, darkMode]}>Doctor:</Text>
                       <Text style={[styles.personDetailValue, darkMode]}>
-                        {selectedPerson?.doctor}
+                        {selectedPerson?.doctor || 'N/A'}
                       </Text>
                     </View>
                   )}
@@ -1042,7 +1052,7 @@ const PDFViewer = ({
                     <View style={styles.personDetailRow}>
                       <Text style={[styles.personDetailLabel, darkMode]}>Id Type:</Text>
                       <Text style={[styles.personDetailValue, darkMode]}>
-                        {selectedPerson?.idType}
+                        {selectedPerson?.idType || 'N/A'}
                       </Text>
                     </View>
                   )}
@@ -1050,7 +1060,7 @@ const PDFViewer = ({
                     <View style={styles.personDetailRow}>
                       <Text style={[styles.personDetailLabel, darkMode]}>Medical:</Text>
                       <Text style={[styles.personDetailValue, darkMode]}>
-                        {selectedPerson?.medical}
+                        {selectedPerson?.medical || 'N/A'}
                       </Text>
                     </View>
                   )}
@@ -1058,7 +1068,7 @@ const PDFViewer = ({
                     <View style={styles.personDetailRow}>
                       <Text style={[styles.personDetailLabel, darkMode]}>Start Date:</Text>
                       <Text style={[styles.personDetailValue, darkMode]}>
-                        {selectedPerson?.startDate}
+                        {selectedPerson?.startDate || 'N/A'}
                       </Text>
                     </View>
                   )}

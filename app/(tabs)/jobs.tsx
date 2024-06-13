@@ -3,8 +3,6 @@ import {
   ActivityIndicator,
   Dimensions,
   FlatList,
-  Modal,
-  Pressable,
   SafeAreaView,
   ScrollView,
   Text,
@@ -21,7 +19,10 @@ import styles from '../../constants/Styles';
 //import FileViewer from 'react-native-file-viewer'
 import * as Sharing from 'expo-sharing';
 //import SInfo from 'react-native-sensitive-info'
+import CrewInfoModal from '@/components/Modals/CrewInfoModal';
+import HazardInfoModal from '@/components/Modals/HazardInfoModal';
 import PersonInfoModal from '@/components/Modals/PersonInfoModal';
+import SkidInfoModal from '@/components/Modals/SkidInfoModal';
 import syncFiles from '@/services/syncFiles';
 import ReactNativeZoomableView from '@openspacelabs/react-native-zoomable-view/src/ReactNativeZoomableView';
 import { useApp, useQuery, useUser } from '@realm/react';
@@ -643,31 +644,6 @@ const PDFViewer = ({
     }
   };
 
-  async function handleCrewMemberPress(item1: {
-    _id: string;
-    name: string;
-    role: string;
-  }): Promise<void> {
-    const crews: { [crewName: string]: any[] } = {};
-    try {
-      currentPerson.forEach((item: any) => {
-        if (item.archive === 'on' || item.crew !== item1) return;
-
-        const crewName = item.crew;
-        if (!crews.hasOwnProperty(crewName)) {
-          crews[crewName] = [];
-        }
-        crews[crewName].push(item);
-      });
-    } catch (error) {
-      console.error('Error: ', error);
-    }
-
-    setSelectedCrewMember(crews);
-    setCrewShowModal(true);
-    setShowModal(false);
-  }
-
   const darkMode = isDarkMode ? styles.textInputDark : styles.textLight;
 
   return (
@@ -682,290 +658,42 @@ const PDFViewer = ({
             alignItems: 'center' /* , maxHeight: max */,
           },
         ]}>
-        <Modal visible={showModal} onRequestClose={() => setShowModal(false)} transparent>
-          <View style={styles.modalContainer}>
-            <View
-              style={[
-                styles.modalHeader,
-                isDarkMode ? styles.modalHeaderDark : styles.modalHeaderLight,
-              ]}>
-              <Text
-                style={[
-                  styles.modalHeadingText,
-                  isDarkMode ? styles.buttonTextDark : styles.headerTextLight,
-                ]}>
-                Skid {String(selectedMarker?.info.pointName)}
-              </Text>
-            </View>
-            <View style={[styles.modalView, isDarkMode ? styles.darkmode : styles.lightBackground]}>
-              <ScrollView>
-                {(accessLevelAdmin === 'on' || accessLevelForeman === 'on') && (
-                  <>
-                    <Text
-                      style={[
-                        styles.modalHeadingText,
-                        isDarkMode ? styles.labelDark : styles.labelLight,
-                      ]}>
-                      Crew:
-                    </Text>
-                    <View style={{ position: 'absolute', top: 10, left: 10 }}></View>
-                    <FlatList
-                      scrollEnabled={false}
-                      data={selectedMarker?.info.crews}
-                      keyExtractor={(item, index) => index.toString()}
-                      renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => handleCrewMemberPress(item)}>
-                          <Text
-                            style={[
-                              styles.listItem,
-                              isDarkMode ? styles.labelDark : styles.labelLight,
-                            ]}>
-                            {item}
-                          </Text>
-                        </TouchableOpacity>
-                      )}
-                    />
-                  </>
-                )}
+        <HazardInfoModal
+          showHazardModal={showHazardModal}
+          selectedHazards={selectedHazards}
+          showModal={showModal}
+          setHazardModal={setHazardModal}
+          setShowModal={setShowModal}
+        />
 
-                {(accessLevelAdmin === 'on' || accessLevelForeman === 'on') && (
-                  <>
-                    <Text
-                      style={[
-                        styles.modalHeadingText,
-                        isDarkMode ? styles.labelDark : styles.labelLight,
-                      ]}>
-                      Docs
-                    </Text>
-                    <FlatList
-                      scrollEnabled={false}
-                      data={selectedMarker?.info.selectedDocuments}
-                      keyExtractor={(item, index) => index.toString()}
-                      renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => handleDocumentPress(item.uri)}>
-                          <Text
-                            style={[
-                              styles.listItem,
-                              isDarkMode ? styles.labelDark : styles.labelLight,
-                            ]}>{`${item.fileName}: `}</Text>
-                        </TouchableOpacity>
-                      )}
-                    />
-                  </>
-                )}
+        <CrewInfoModal
+          showCrewModal={showCrewModal}
+          setCrewShowModal={setCrewShowModal}
+          selectedCrewMember={selectedCrewMember}
+          handleFileSelection={handleFileSelection}
+          setShowModal={setShowModal}
+        />
 
-                <Text
-                  style={[
-                    styles.modalHeadingText,
-                    isDarkMode ? styles.labelDark : styles.labelLight,
-                  ]}>
-                  Weekly Cut Plan
-                </Text>
-                <FlatList
-                  scrollEnabled={false}
-                  data={cutPlans}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity onPress={() => handleCutPlanFilePress(item.base64String)}>
-                      <Text
-                        style={[
-                          styles.listItem,
-                          isDarkMode ? styles.labelDark : styles.labelLight,
-                        ]}>{`${item.fileName}: `}</Text>
-                    </TouchableOpacity>
-                  )}
-                />
-                <Text
-                  style={[
-                    styles.modalHeadingText,
-                    isDarkMode ? styles.labelDark : styles.labelLight,
-                  ]}>
-                  Skid Hazards
-                </Text>
-                <FlatList
-                  scrollEnabled={false}
-                  data={siteHazards}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity onPress={() => handleHazardPress(item.id)}>
-                      <Text
-                        style={[
-                          styles.listItem,
-                          isDarkMode ? styles.labelDark : styles.labelLight,
-                        ]}>{`${item.id}: ${item.title}`}</Text>
-                    </TouchableOpacity>
-                  )}
-                />
-
-                <Text
-                  style={[
-                    styles.modalHeadingText,
-                    isDarkMode ? styles.labelDark : styles.labelLight,
-                  ]}>
-                  General Hazards
-                </Text>
-                <FlatList
-                  scrollEnabled={false}
-                  data={generalHazard}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity onPress={() => handleGeneralHazardPress(item)}>
-                      <Text
-                        style={[
-                          styles.listItem,
-                          isDarkMode ? styles.labelDark : styles.labelLight,
-                        ]}>{`${item.id}: ${item.title}`}</Text>
-                    </TouchableOpacity>
-                  )}
-                />
-              </ScrollView>
-              <Pressable
-                style={[
-                  styles.button,
-                  styles.buttonClose,
-                  isDarkMode ? styles.buttonBackgroundDark : styles.buttonBackgroundLight,
-                ]}
-                onPress={() => setShowModal(false)}>
-                <Text
-                  style={[
-                    styles.textClose,
-                    isDarkMode ? styles.textInputDark : styles.headerTextLight,
-                  ]}>
-                  Close
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-        </Modal>
-
-        <Modal
-          visible={showHazardModal}
-          onRequestClose={() => setHazardModal(false)}
-          transparent
-          animationType="fade">
-          <View style={styles.modalContainer}>
-            <View
-              style={[
-                styles.modalHeader,
-                isDarkMode ? styles.modalHeaderDark : styles.modalHeaderLight,
-              ]}>
-              <Text
-                style={[
-                  styles.modalHeadingText,
-                  isDarkMode ? styles.buttonTextDark : styles.headerTextLight,
-                ]}>
-                Hazards
-              </Text>
-            </View>
-            <View style={[styles.modalView, isDarkMode ? styles.darkmode : styles.lightBackground]}>
-              <ScrollView>
-                <HazardContainer hazards={selectedHazards} />
-              </ScrollView>
-              <View style={styles.closeButtonPadding}>
-                <TouchableOpacity
-                  style={[
-                    styles.buttonClose,
-                    isDarkMode ? styles.buttonBackgroundDark : styles.buttonBackgroundLight,
-                  ]}
-                  onPress={() => {
-                    setShowModal(!showModal);
-                    setHazardModal(!showHazardModal);
-                  }}>
-                  <Text
-                    style={[
-                      styles.textClose,
-                      isDarkMode ? styles.buttonTextDark : styles.headerTextLight,
-                    ]}>
-                    Close
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </Modal>
-
-        <Modal
-          visible={showCrewModal}
-          onRequestClose={() => setCrewShowModal(false)}
-          transparent
-          animationType="fade">
-          <View style={styles.modalContainer}>
-            <View
-              style={[
-                styles.modalHeader,
-                isDarkMode ? styles.modalHeaderDark : styles.modalHeaderLight,
-              ]}>
-              <Text
-                style={[
-                  styles.modalHeadingText,
-                  isDarkMode ? styles.buttonTextDark : styles.headerTextLight,
-                ]}>
-                Crew Info
-              </Text>
-            </View>
-            <View style={[styles.modalView, isDarkMode ? styles.darkmode : styles.lightBackground]}>
-              {selectedCrewMember &&
-                Object.entries(selectedCrewMember).map(([crewName, crewMembers]) => {
-                  if (crewName) {
-                    return (
-                      <View key={crewName}>
-                        <Text
-                          style={[
-                            styles.modalTextBold,
-                            isDarkMode ? styles.buttonTextDark : styles.buttonTextLight,
-                            { fontSize: 20 },
-                          ]}>
-                          Crew: {crewName}
-                        </Text>
-                        <FlatList
-                          style={{ maxHeight: 170 }} // Adjust the maximum height as needed
-                          scrollEnabled={true}
-                          data={crewMembers}
-                          keyExtractor={(item) => item._id}
-                          renderItem={({ item }) => (
-                            <TouchableOpacity onPress={() => handleFileSelection(item._id)}>
-                              <Text
-                                style={[
-                                  styles.listItem,
-                                  isDarkMode ? styles.buttonTextDark : styles.buttonTextLight,
-                                ]}>
-                                {item.name}
-                              </Text>
-                            </TouchableOpacity>
-                          )}
-                        />
-                      </View>
-                    );
-                  } else {
-                    return null;
-                  }
-                })}
-              <Pressable
-                style={[
-                  styles.button,
-                  styles.buttonClose,
-                  isDarkMode ? styles.buttonBackgroundDark : styles.buttonBackgroundLight,
-                ]}
-                onPress={() => {
-                  setCrewShowModal(false);
-                  setShowModal(true);
-                }}>
-                <Text
-                  style={[
-                    styles.textClose,
-                    isDarkMode ? styles.buttonTextDark : styles.headerTextLight,
-                  ]}>
-                  Close
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-        </Modal>
+        <SkidInfoModal
+          showModal={showModal}
+          setShowModal={setShowModal}
+          selectedMarker={selectedMarker}
+          accessLevelAdmin={accessLevelAdmin}
+          accessLevelForeman={accessLevelForeman}
+          currentPerson={currentPerson}
+          setSelectedCrewMember={setSelectedCrewMember}
+          setCrewShowModal={setCrewShowModal}
+          cutPlans={cutPlans}
+          handleCutPlanFilePress={handleCutPlanFilePress}
+          siteHazards={siteHazards}
+          handleHazardPress={handleHazardPress}
+          generalHazard={generalHazard}
+          handleGeneralHazardPress={handleGeneralHazardPress}
+        />
 
         <PersonInfoModal
           showCrewPersonModal={showCrewPersonModal}
           setCrewPersonShowModal={setCrewPersonShowModal}
-          isDarkMode={isDarkMode}
           selectedPerson={selectedPerson}
           selectedImage={selectedImage}
           defaultProfileImage={defaultProfileImage}

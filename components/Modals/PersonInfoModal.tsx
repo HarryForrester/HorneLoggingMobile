@@ -9,13 +9,13 @@ import {
   Text,
   TouchableOpacity,
   View,
+  useColorScheme,
 } from 'react-native';
 import { Int32 } from 'react-native/Libraries/Types/CodegenTypes';
 
 interface Props {
   showCrewPersonModal: boolean;
   setCrewPersonShowModal: (show: boolean) => void;
-  isDarkMode: boolean;
   selectedPerson: Person;
   selectedImage: string;
   defaultProfileImage: any;
@@ -47,7 +47,6 @@ interface Person {
 const PersonInfoModal: React.FC<Props> = ({
   showCrewPersonModal,
   setCrewPersonShowModal,
-  isDarkMode,
   selectedPerson,
   selectedImage,
   defaultProfileImage,
@@ -56,6 +55,8 @@ const PersonInfoModal: React.FC<Props> = ({
   selectedFile,
   setCrewShowModal,
 }) => {
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === 'dark';
   const darkMode = isDarkMode ? styles.textInputDark : styles.textLight;
 
   return (

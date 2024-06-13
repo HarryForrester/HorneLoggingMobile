@@ -1,8 +1,13 @@
 import styles from '@/constants/Styles';
 import handleDocumentPress from '@/utils/documentFunctions';
+import * as FileSystem from 'expo-file-system';
+import * as IntentLauncher from 'expo-intent-launcher';
+
+import * as Sharing from 'expo-sharing';
 import {
   FlatList,
   Modal,
+  Platform,
   Pressable,
   ScrollView,
   Text,
@@ -21,7 +26,6 @@ interface Props {
   setSelectedCrewMember: (member: any) => void;
   setCrewShowModal: (showModal: boolean) => void;
   cutPlans: any;
-  handleCutPlanFilePress: (file: string) => void;
   siteHazards: any;
   handleHazardPress: (file: string) => void;
   generalHazard: any;
@@ -38,7 +42,6 @@ const SkidInfoModal: React.FC<Props> = ({
   setSelectedCrewMember,
   setCrewShowModal,
   cutPlans,
-  handleCutPlanFilePress,
   siteHazards,
   handleHazardPress,
   generalHazard,
@@ -70,6 +73,40 @@ const SkidInfoModal: React.FC<Props> = ({
     setSelectedCrewMember(crews);
     setCrewShowModal(true);
     setShowModal(false);
+  }
+
+  async function handleCutPlanFilePress(base64String: any) {
+    const fileName = 'tempcutplanfile.pdf';
+    const filePath = `${FileSystem.documentDirectory}${fileName}`;
+
+    try {
+      // Writing the base64 string to a file
+      await FileSystem.writeAsStringAsync(filePath, base64String, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      // Check if the file exists and open it
+      const fileInfo = await FileSystem.getInfoAsync(filePath);
+      if (fileInfo.exists) {
+        if (Platform.OS === 'android') {
+          // On Android, use Linking to open the file
+          FileSystem.getContentUriAsync(filePath).then((cUri) => {
+            console.log(cUri);
+            IntentLauncher.startActivityAsync('android.intent.action.VIEW', {
+              data: cUri,
+              flags: 1,
+            });
+          });
+        } else {
+          // On iOS, share the file using expo-sharing
+          await Sharing.shareAsync(filePath);
+        }
+      } else {
+        console.log('File does not exist');
+      }
+    } catch (error) {
+      console.error('Failed to open or remove the file:', error);
+    }
   }
 
   return (

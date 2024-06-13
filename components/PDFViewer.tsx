@@ -372,34 +372,6 @@ const PDFViewer = ({
     }
   }
 
-  async function handleCutPlanFilePress(base64String: any) {
-    const fileName = 'tempcutplanfile.pdf';
-    const filePath = `${FileSystem.documentDirectory}${fileName}`;
-
-    try {
-      // Writing the base64 string to a file
-      await FileSystem.writeAsStringAsync(filePath, base64String, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-
-      // Check if the file exists and open it
-      const fileInfo = await FileSystem.getInfoAsync(filePath);
-      if (fileInfo.exists) {
-        if (await Sharing.isAvailableAsync()) {
-          await Sharing.shareAsync(filePath, {
-            dialogTitle: 'Open PDF',
-          });
-          console.log('File opened successfully');
-        } else {
-          console.log('Sharing is not available on this device');
-        }
-      } else {
-        console.log('File does not exist');
-      }
-    } catch (error) {
-      console.error('Failed to open or remove the file:', error);
-    }
-  }
   const handleFileSelection = async (crewMemberId: string) => {
     try {
       const filesForCrewMember = filesCollection.filter(
@@ -468,7 +440,6 @@ const PDFViewer = ({
           setSelectedCrewMember={setSelectedCrewMember}
           setCrewShowModal={setCrewShowModal}
           cutPlans={cutPlans}
-          handleCutPlanFilePress={handleCutPlanFilePress}
           siteHazards={siteHazards}
           handleHazardPress={handleHazardPress}
           generalHazard={generalHazard}

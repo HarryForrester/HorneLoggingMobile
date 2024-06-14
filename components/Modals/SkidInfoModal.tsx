@@ -49,7 +49,7 @@ const SkidInfoModal: React.FC<Props> = ({
 }) => {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
-
+  console.log('cunt cunt cunt', siteHazards);
   async function handleCrewMemberPress(item1: {
     _id: string;
     name: string;
@@ -158,13 +158,16 @@ const SkidInfoModal: React.FC<Props> = ({
 
             {(accessLevelAdmin === 'on' || accessLevelForeman === 'on') && (
               <>
-                <Text
-                  style={[
-                    styles.modalHeadingText,
-                    isDarkMode ? styles.labelDark : styles.labelLight,
-                  ]}>
-                  Docs
-                </Text>
+                {selectedMarker?.info.selectedDocuments.length > 0 && (
+                  <Text
+                    style={[
+                      styles.modalHeadingText,
+                      isDarkMode ? styles.labelDark : styles.labelLight,
+                    ]}>
+                    Docs
+                  </Text>
+                )}
+
                 <FlatList
                   scrollEnabled={false}
                   data={selectedMarker?.info.selectedDocuments}
@@ -181,11 +184,11 @@ const SkidInfoModal: React.FC<Props> = ({
                 />
               </>
             )}
-
             <Text
               style={[styles.modalHeadingText, isDarkMode ? styles.labelDark : styles.labelLight]}>
               Weekly Cut Plan
             </Text>
+
             <FlatList
               scrollEnabled={false}
               data={cutPlans}
@@ -200,10 +203,16 @@ const SkidInfoModal: React.FC<Props> = ({
                 </TouchableOpacity>
               )}
             />
-            <Text
-              style={[styles.modalHeadingText, isDarkMode ? styles.labelDark : styles.labelLight]}>
-              Skid Hazards
-            </Text>
+            {siteHazards && siteHazards.length > 0 && (
+              <Text
+                style={[
+                  styles.modalHeadingText,
+                  isDarkMode ? styles.labelDark : styles.labelLight,
+                ]}>
+                Skid Hazards
+              </Text>
+            )}
+
             <FlatList
               scrollEnabled={false}
               data={siteHazards}
@@ -218,11 +227,16 @@ const SkidInfoModal: React.FC<Props> = ({
                 </TouchableOpacity>
               )}
             />
+            {generalHazard.length > 0 && (
+              <Text
+                style={[
+                  styles.modalHeadingText,
+                  isDarkMode ? styles.labelDark : styles.labelLight,
+                ]}>
+                General Hazards
+              </Text>
+            )}
 
-            <Text
-              style={[styles.modalHeadingText, isDarkMode ? styles.labelDark : styles.labelLight]}>
-              General Hazards
-            </Text>
             <FlatList
               scrollEnabled={false}
               data={generalHazard}

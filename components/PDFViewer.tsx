@@ -3,9 +3,9 @@ import File from '@/schemas/File';
 import Hazards from '@/schemas/Hazards';
 import People from '@/schemas/People';
 
+import Maps from '@/schemas/Maps';
 import { useApp, useQuery } from '@realm/react';
 import * as FileSystem from 'expo-file-system';
-import * as SecureStore from 'expo-secure-store';
 import * as Sharing from 'expo-sharing';
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
@@ -47,15 +47,16 @@ const Marker = ({ x, y, onPress }: { x: number; y: number; onPress: () => void }
 };
 
 const PDFViewer = ({
-  uri,
-  points,
+  selectedMap,
   generalHazard,
 }: {
-  uri: any;
-  points: Point[];
+  selectedMap: Maps;
   generalHazard: HazardProps[];
 }) => {
   const [pdfPath, setPdfPath] = useState('');
+  console.log('the pdf path is ', pdfPath);
+  const app = useApp();
+
   const [showModal, setShowModal] = useState(false);
   const [showCrewModal, setCrewShowModal] = useState(false);
   const [showCrewPersonModal, setCrewPersonShowModal] = useState(false);
@@ -68,7 +69,7 @@ const PDFViewer = ({
   const [showHazardModal, setHazardModal] = useState(false);
   const [selectedHazards, setSelectedHazards] = useState([]);
   const [hazards, setHazards] = useState<any>(null);
-  const [getCrew, setCrew] = useState<any>(null);
+  const [getCrew, setCrew] = useState<any>(app.currentUser?.customData.crew);
   const [accessLevelAdmin, setAccessLevelAdmin] = useState<any>('off');
   const [accessLevelForeman, setAccessLevelForeman] = useState<any>('off');
 
@@ -80,8 +81,6 @@ const PDFViewer = ({
   const currentPerson = useQuery(People);
   const filesCollection = useQuery(File);
   const hazardsCollection = useQuery(Hazards);
-
-  const app = useApp();
 
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
@@ -157,15 +156,17 @@ const PDFViewer = ({
   useEffect(() => {
     const fetchPdf = async () => {
       const folderPath = `${FileSystem.documentDirectory}files`;
-      const url = uri; // Assuming uri is defined in your scope
+      const url = selectedMap.map; // Assuming uri is defined in your scope
       const filePath = `${folderPath}${url}`;
-
+      console.log('url: cunts', url);
       const checkFileExists = async () => {
         try {
           const fileInfo = await FileSystem.getInfoAsync(filePath);
+          console.log('fileIndfo ', fileInfo);
           if (fileInfo.exists) {
             // If the file exists, set the PDF
             setPdfPath(filePath);
+            console.log('fikePgth', filePath);
           } else {
             // Optionally, handle the case where the file doesn't exist
             console.log('File does not exist.');
@@ -179,15 +180,15 @@ const PDFViewer = ({
       checkFileExists();
 
       try {
-        const crew = (await SecureStore.getItemAsync('crew')) || '';
-        setCrew(app.currentUser?.customData.crew || JSON.parse(crew));
+        //const crew = (await SecureStore.getItemAsync('crew')) || '';
+        setCrew(app.currentUser?.customData.crew);
       } catch (error) {
         console.error('Error fetching crew data:', error);
       }
     };
 
     fetchPdf();
-  }, [app.currentUser?.customData.crew, uri]);
+  }, [app.currentUser?.customData.crew, selectedMap.map]);
 
   const handleMarkerPress = (marker: Point) => {
     setSelectedMarker((prevMarker) => {
@@ -256,22 +257,16 @@ const PDFViewer = ({
       }
     }
   }, [app.currentUser?.customData.device]);
-
-  const markers = points.map((marker, index) => {
+  const markers = selectedMap.points.map((marker: any, index: number) => {
     const { originalWidth, originalHeight } = marker.point;
-    console.log('ORIGINALHEIGHT: ', originalHeight);
-    console.log('ORIGINALWIDTH: ', originalWidth);
     const screenWidth = Dimensions.get('window').width;
     const screenHeight = Dimensions.get('window').height;
-    console.log('SCREENHEIGHT: ', screenHeight);
-    console.log('SCREENWIDTH: ', screenWidth);
     const screenAspectRatio = screenWidth / screenHeight;
     const markerAspectRatio = originalWidth / originalHeight;
     let x, y;
 
     if (markerAspectRatio > screenAspectRatio) {
       const scaleFactor = screenWidth / originalWidth;
-      console.log(scaleFactor);
       const scaledHeight = originalHeight * scaleFactor;
       const verticalMargin = (screenHeight - scaledHeight) / 2;
       x = marker.point.x * scaleFactor;
@@ -385,7 +380,6 @@ const PDFViewer = ({
       const folderPath = `${FileSystem.documentDirectory}/files`;
       const filePath = `${folderPath}${crewMemberData[0].imgUrl}`;
       const imageUrl = crewMemberData[0].imgUrl;
-      console.log('this si the file path for the image bnro ,auy', filePath);
       if (imageUrl === '/img/default.jpg') {
         setSelectedImage(null);
       } else {

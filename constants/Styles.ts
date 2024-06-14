@@ -472,12 +472,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#0c3424',
   },
   listItem: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: '#ddd',
     paddingVertical: 10,
     paddingHorizontal: 15,
     textAlign: 'center',
     fontSize: 15,
+    marginBottom: 10,
   },
   fileContainer: {
     marginBottom: 10,

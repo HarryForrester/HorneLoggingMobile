@@ -10,6 +10,10 @@ import 'react-native-reanimated';
 import firebaseConfig from '../firebaseConfig';
 
 import LoginTab from '@/components/LoginTab';
+import Map_Point_Info from '@/schemas/Map_Point_Info';
+import Map_Points from '@/schemas/Map_Points';
+import Map_Points_Info_SelectedDocuments from '@/schemas/Map_Points_Info_SelectedDocuments';
+import Map_Points_Point from '@/schemas/Map_Points_Point';
 import { Realm } from '@realm/react';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
@@ -240,6 +244,10 @@ export default function RootLayout() {
             File,
             Forms,
             Maps,
+            Map_Points,
+            Map_Point_Info,
+            Map_Points_Info_SelectedDocuments,
+            Map_Points_Point,
             Hazards,
             People,
             TimeSheet,
@@ -265,6 +273,11 @@ export default function RootLayout() {
                 subs.add(realm.objects(File));
                 subs.add(realm.objects(Forms));
                 subs.add(realm.objects(Maps));
+                //subs.add(realm.objects(Map_Points));
+                //subs.add(realm.objects(Map_Point_Info));
+                //subs.add(realm.objects(Map_Points_Info_SelectedDocuments));
+                //subs.add(realm.objects(Map_Points_Point));
+
                 subs.add(realm.objects(Hazards));
                 subs.add(realm.objects(TimeSheet));
                 subs.add(realm.objects(People));
@@ -274,7 +287,7 @@ export default function RootLayout() {
                 subs.add(realm.objects(LibraryFile));
                 subs.add(realm.objects(OnJobTraining));
                 subs.add(realm.objects(Task));
-                //subs.add(realm.objects(TaskNotes))
+                //subs.add(realm.objects(TaskNotes));
               },
               rerunOnOpen: true,
             },

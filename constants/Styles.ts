@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   modalHeadingText: {
     textAlign: 'center',
     fontSize: 20,
-    padding: 5,
+    paddingBottom: 5,
     fontWeight: 'bold',
   },
   modalFormSectionText: {
@@ -474,12 +474,13 @@ const styles = StyleSheet.create({
   listItem: {
     borderWidth: 1,
     borderRadius: 8,
-    borderColor: '#ddd',
+    borderColor: '#969696',
     paddingVertical: 10,
     paddingHorizontal: 15,
     textAlign: 'center',
     fontSize: 15,
     marginBottom: 10,
+    backgroundColor: '#afafaf',
   },
   fileContainer: {
     marginBottom: 10,
@@ -659,6 +660,14 @@ const styles = StyleSheet.create({
   userInfo: {
     marginTop: 10,
     marginLeft: 20,
+  },
+  skidFieldContainer: {
+    borderColor: 'black',
+    borderRadius: 10,
+    borderWidth: 1,
+    padding: 10,
+    marginBottom: 10,
+    backgroundColor: '#e1e1e1',
   },
 });
 

@@ -126,130 +126,141 @@ const SkidInfoModal: React.FC<Props> = ({
         </View>
         <View style={[styles.modalView, isDarkMode ? styles.darkmode : styles.lightBackground]}>
           <ScrollView>
-            {(accessLevelAdmin === 'on' || accessLevelForeman === 'on') && (
-              <>
-                <Text
-                  style={[
-                    styles.modalHeadingText,
-                    isDarkMode ? styles.labelDark : styles.labelLight,
-                  ]}>
-                  Crew:
-                </Text>
-                <View style={{ position: 'absolute', top: 10, left: 10 }}></View>
-                <FlatList
-                  scrollEnabled={false}
-                  data={selectedMarker?.info.crews}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity onPress={() => handleCrewMemberPress(item)}>
-                      <Text
-                        style={[
-                          styles.listItem,
-                          isDarkMode ? styles.labelDark : styles.labelLight,
-                        ]}>
-                        {item}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                />
-              </>
-            )}
-
-            {(accessLevelAdmin === 'on' || accessLevelForeman === 'on') && (
-              <>
-                {selectedMarker?.info.selectedDocuments.length > 0 && (
+            <View style={styles.skidFieldContainer}>
+              {(accessLevelAdmin === 'on' || accessLevelForeman === 'on') && (
+                <>
                   <Text
                     style={[
                       styles.modalHeadingText,
                       isDarkMode ? styles.labelDark : styles.labelLight,
                     ]}>
-                    Docs
+                    Crew:
                   </Text>
-                )}
-
-                <FlatList
-                  scrollEnabled={false}
-                  data={selectedMarker?.info.selectedDocuments}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity onPress={() => handleDocumentPress(item.uri)}>
-                      <Text
-                        style={[
-                          styles.listItem,
-                          isDarkMode ? styles.labelDark : styles.labelLight,
-                        ]}>{`${item.fileName}: `}</Text>
-                    </TouchableOpacity>
+                  <FlatList
+                    scrollEnabled={false}
+                    data={selectedMarker?.info.crews}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity onPress={() => handleCrewMemberPress(item)}>
+                        <Text
+                          style={[
+                            styles.listItem,
+                            isDarkMode ? styles.labelDark : styles.labelLight,
+                          ]}>
+                          {item}
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                  />
+                </>
+              )}
+            </View>
+            <View style={styles.skidFieldContainer}>
+              {(accessLevelAdmin === 'on' || accessLevelForeman === 'on') && (
+                <>
+                  {selectedMarker?.info.selectedDocuments.length > 0 && (
+                    <Text
+                      style={[
+                        styles.modalHeadingText,
+                        isDarkMode ? styles.labelDark : styles.labelLight,
+                      ]}>
+                      Docs
+                    </Text>
                   )}
-                />
-              </>
-            )}
-            <Text
-              style={[styles.modalHeadingText, isDarkMode ? styles.labelDark : styles.labelLight]}>
-              Weekly Cut Plan
-            </Text>
 
-            <FlatList
-              scrollEnabled={false}
-              data={cutPlans}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => handleCutPlanFilePress(item.base64String)}>
-                  <Text
-                    style={[
-                      styles.listItem,
-                      isDarkMode ? styles.labelDark : styles.labelLight,
-                    ]}>{`${item.fileName}: `}</Text>
-                </TouchableOpacity>
+                  <FlatList
+                    scrollEnabled={false}
+                    data={selectedMarker?.info.selectedDocuments}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity onPress={() => handleDocumentPress(item.uri)}>
+                        <Text
+                          style={[
+                            styles.listItem,
+                            isDarkMode ? styles.labelDark : styles.labelLight,
+                          ]}>{`${item.fileName}: `}</Text>
+                      </TouchableOpacity>
+                    )}
+                  />
+                </>
               )}
-            />
-            {siteHazards && siteHazards.length > 0 && (
+            </View>
+            <View style={styles.skidFieldContainer}>
               <Text
                 style={[
                   styles.modalHeadingText,
                   isDarkMode ? styles.labelDark : styles.labelLight,
                 ]}>
-                Skid Hazards
+                Weekly Cut Plan
               </Text>
-            )}
 
-            <FlatList
-              scrollEnabled={false}
-              data={siteHazards}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => handleHazardPress(item.id)}>
-                  <Text
-                    style={[
-                      styles.listItem,
-                      isDarkMode ? styles.labelDark : styles.labelLight,
-                    ]}>{`${item.id}: ${item.title}`}</Text>
-                </TouchableOpacity>
+              <FlatList
+                scrollEnabled={false}
+                data={cutPlans}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                  <TouchableOpacity onPress={() => handleCutPlanFilePress(item.base64String)}>
+                    <Text
+                      style={[
+                        styles.listItem,
+                        isDarkMode ? styles.labelDark : styles.labelLight,
+                      ]}>{`${item.fileName}: `}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
+            <View style={styles.skidFieldContainer}>
+              {siteHazards && siteHazards.length > 0 && (
+                <Text
+                  style={[
+                    styles.modalHeadingText,
+                    isDarkMode ? styles.labelDark : styles.labelLight,
+                  ]}>
+                  Skid Hazards
+                </Text>
               )}
-            />
-            {generalHazards.length > 0 && (
-              <Text
-                style={[
-                  styles.modalHeadingText,
-                  isDarkMode ? styles.labelDark : styles.labelLight,
-                ]}>
-                General Hazards
-              </Text>
-            )}
 
-            <FlatList
-              scrollEnabled={false}
-              data={generalHazards}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => handleGeneralHazardPress(item)}>
-                  <Text
-                    style={[
-                      styles.listItem,
-                      isDarkMode ? styles.labelDark : styles.labelLight,
-                    ]}>{`${item.id}: ${item.title}`}</Text>
-                </TouchableOpacity>
+              <FlatList
+                scrollEnabled={false}
+                data={siteHazards}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                  <TouchableOpacity onPress={() => handleHazardPress(item.id)}>
+                    <Text
+                      style={[
+                        styles.listItem,
+                        isDarkMode ? styles.labelDark : styles.labelLight,
+                      ]}>{`${item.id}: ${item.title}`}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
+            <View style={styles.skidFieldContainer}>
+              {generalHazards.length > 0 && (
+                <Text
+                  style={[
+                    styles.modalHeadingText,
+                    isDarkMode ? styles.labelDark : styles.labelLight,
+                  ]}>
+                  General Hazards
+                </Text>
               )}
-            />
+
+              <FlatList
+                scrollEnabled={false}
+                data={generalHazards}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                  <TouchableOpacity onPress={() => handleGeneralHazardPress(item)}>
+                    <Text
+                      style={[
+                        styles.listItem,
+                        isDarkMode ? styles.labelDark : styles.labelLight,
+                      ]}>{`${item.id}: ${item.title}`}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
           </ScrollView>
           <Pressable
             style={[

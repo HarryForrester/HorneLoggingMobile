@@ -604,7 +604,7 @@ const styles = StyleSheet.create({
   personImage: {
     height: 100,
     width: 100,
-    borderRadius: 10,
+    borderRadius: 50,
   },
   personSettingsImage: {
     height: 150,

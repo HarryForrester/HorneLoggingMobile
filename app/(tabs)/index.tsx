@@ -14,7 +14,7 @@ export default function HomeScreen() {
         <Text style={Homestyles.title}>Horne Logging</Text>
         <View style={Homestyles.buttonContainer}>
           <Button
-            buttonColor="black"
+            buttonColor="#0c3424"
             icon="file-document-multiple"
             mode="contained"
             style={Homestyles.button}
@@ -24,7 +24,7 @@ export default function HomeScreen() {
             Docs
           </Button>
           <Button
-            buttonColor="black"
+            buttonColor="#0c3424"
             icon="account-box"
             mode="contained"
             style={Homestyles.button}
@@ -34,7 +34,7 @@ export default function HomeScreen() {
             People
           </Button>
           <Button
-            buttonColor="black"
+            buttonColor="#0c3424"
             icon="account-settings"
             mode="contained"
             style={Homestyles.button}

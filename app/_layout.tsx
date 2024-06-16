@@ -200,7 +200,7 @@ function CustomThemeProvider({ children }: any) {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
-      <StatusBar style="dark" backgroundColor={statusBarBackgroundColor} />
+      <StatusBar style="light" backgroundColor={statusBarBackgroundColor} />
 
       {children}
     </ThemeProvider>

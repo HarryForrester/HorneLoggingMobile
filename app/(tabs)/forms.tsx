@@ -1,7 +1,8 @@
 import FormModal from '@/components/Modals/FormModal';
 import { useApp, useQuery, useUser } from '@realm/react';
 import { useNavigation } from 'expo-router';
-import * as SecureStore from 'expo-secure-store';
+//import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, TouchableHighlight, View, useColorScheme } from 'react-native';
 import AddOnJobTrainingForm from '../../components/Modals/AddOnJobTrainingForm';
@@ -234,7 +235,7 @@ const FormTab = () => {
 
   const getFormDataForTemplate = async (formTemplate: any) => {
     try {
-      const storedFormData = await SecureStore.getItemAsync(`formData_${formTemplate._id}`);
+      const storedFormData = await AsyncStorage.getItem(`formData_${formTemplate._id}`);
 
       if (storedFormData) {
         return JSON.parse(storedFormData);

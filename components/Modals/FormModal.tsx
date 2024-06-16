@@ -1,7 +1,7 @@
 import styles from '@/constants/Styles';
 import FilledForms from '@/schemas/FilledForms';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useApp, useRealm } from '@realm/react';
-import * as SecureStore from 'expo-secure-store';
 import React, { useState } from 'react';
 import { Alert, Modal, Pressable, ScrollView, Text, View, useColorScheme } from 'react-native';
 import CheckElement from '../Form/CheckElement';
@@ -122,7 +122,7 @@ const FormModal: React.FC<Props> = ({
 
   const saveFormDataForTemplate = async (formTemplateId: string, formData: any) => {
     try {
-      await SecureStore.setItemAsync(`formData_${formTemplateId}`, JSON.stringify(formData));
+      await AsyncStorage.setItem(`formData_${formTemplateId}`, JSON.stringify(formData));
     } catch (err) {
       console.error('Error saving form data to AsyncStorage:', err);
     }

@@ -52,7 +52,7 @@ const CrewInfoModal: React.FC<Props> = ({
             Object.entries(selectedCrewMember).map(([crewName, crewMembers]: any) => {
               if (crewName) {
                 return (
-                  <View key={crewName}>
+                  <View key={crewName} style={styles.skidFieldContainer}>
                     <Text
                       style={[
                         styles.modalTextBold,

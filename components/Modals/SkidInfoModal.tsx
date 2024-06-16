@@ -28,7 +28,7 @@ interface Props {
   cutPlans: any;
   siteHazards: any;
   handleHazardPress: (file: string) => void;
-  generalHazard: any;
+  generalHazards: any;
   handleGeneralHazardPress: (file: string) => void;
 }
 
@@ -44,7 +44,7 @@ const SkidInfoModal: React.FC<Props> = ({
   cutPlans,
   siteHazards,
   handleHazardPress,
-  generalHazard,
+  generalHazards,
   handleGeneralHazardPress,
 }) => {
   const colorScheme = useColorScheme();
@@ -226,7 +226,7 @@ const SkidInfoModal: React.FC<Props> = ({
                 </TouchableOpacity>
               )}
             />
-            {generalHazard.length > 0 && (
+            {generalHazards.length > 0 && (
               <Text
                 style={[
                   styles.modalHeadingText,
@@ -238,7 +238,7 @@ const SkidInfoModal: React.FC<Props> = ({
 
             <FlatList
               scrollEnabled={false}
-              data={generalHazard}
+              data={generalHazards}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
                 <TouchableOpacity onPress={() => handleGeneralHazardPress(item)}>

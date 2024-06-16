@@ -24,7 +24,7 @@ const JobScreen = () => {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
   //const [maps, setMaps] = useState<any>([]); // State to store maps
-  const [generalHazardData1, setGeneralHazardData] = useState<any>([]); // State to store general hazards
+  const [generalHazardData, setGeneralHazardData] = useState<any>([]); // State to store general hazards
   const [showPdf, setShowPdf] = useState(false); // State to show or hide pdf
   //const [selectedMapId, setSelectedMapId] = useState<string>(''); // State to store selected map
   const mapsCollection = useQuery(Maps);
@@ -91,15 +91,16 @@ const JobScreen = () => {
         return gh._account === user.customData._account;
       })
       .map((gh: any) => {
+        console.log('fuck me', gh);
         try {
           const filteredHazards = hazards
             .filter((hazard) => {
-              return gh.hazards.includes(hazard.id);
+              return gh.hazards.includes(hazard._id.toHexString());
             })
             .sort((a, b) => {
               const idA = a.id;
               const idB = b.id;
-
+              console.log('puss', filteredHazards);
               if (idA < idB) {
                 return -1;
               }
@@ -108,7 +109,7 @@ const JobScreen = () => {
               }
               return 0;
             });
-
+          console.log('generalHazardsData: ', generalHazardData);
           setGeneralHazardData(filteredHazards);
         } catch (err) {
           console.error('Error has occured while parsing General Hazards', err);
@@ -177,7 +178,7 @@ const JobScreen = () => {
                 zoomStep={0.5}
                 initialZoom={1}
                 contentHeight={1400}>
-                <PDFViewer selectedMap={selectedMap} generalHazard={generalHazardData1} />
+                <PDFViewer selectedMap={selectedMap} generalHazard={generalHazardData} />
               </ReactNativeZoomableView>
             )}
           </ScrollView>

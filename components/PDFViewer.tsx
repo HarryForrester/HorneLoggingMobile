@@ -103,26 +103,19 @@ const PDFViewer = ({
 
   useEffect(() => {
     if (selectedMarker && selectedMarker.info && selectedMarker.info.siteHazards) {
+      const siteHazards = selectedMarker.info.siteHazards;
+
+      console.log('hello there: ', siteHazards);
       try {
-        const filteredHazards = hazardsCollection
-          .filter((hazard: any) =>
-            selectedMarker.info.siteHazards.includes(hazard._id.toHexString()),
-          )
-          .sort((a, b) => {
-            const idA = a.id;
-            const idB = b.id;
+        const filteredHazards = hazards.filter((hazard: any) => siteHazards.includes(hazard._id));
 
-            if (idA < idB) return -1;
-            if (idA > idB) return 1;
-            return 0;
-          });
-
+        console.log('heelo memeem', filteredHazards);
         setSiteHazards(filteredHazards);
       } catch (err) {
         console.error('Error has occurred while parsing General Hazards:', err);
       }
     }
-  }, [hazardsCollection, selectedMarker]);
+  }, [selectedMarker, hazards]);
 
   useEffect(() => {
     try {
@@ -213,7 +206,7 @@ const PDFViewer = ({
       }
 
       // Convert the ObjectId to a string
-      const stringId = hazard._id.toString();
+      const stringId = hazard._id.toHexString();
 
       // Return a new map object with parsed points and stringId
       return {
@@ -428,7 +421,7 @@ const PDFViewer = ({
           cutPlans={cutPlans}
           siteHazards={siteHazards}
           handleHazardPress={handleHazardPress}
-          generalHazard={generalHazard}
+          generalHazards={generalHazard}
           handleGeneralHazardPress={handleGeneralHazardPress}
         />
 

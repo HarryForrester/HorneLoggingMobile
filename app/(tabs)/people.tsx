@@ -2,11 +2,6 @@ import { useQuery, useUser } from '@realm/react';
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  Image,
-  Linking,
-  Modal,
-  Pressable,
-  ScrollView,
   SectionList,
   Text,
   TouchableOpacity,
@@ -16,7 +11,7 @@ import {
 //import RNFS from 'react-native-fs';
 import * as FileSystem from 'expo-file-system';
 
-import handleDocumentPress from '@/utils/documentFunctions';
+import PersonInfoModal from '@/components/Modals/PersonInfoModal';
 import { useNavigation } from 'expo-router';
 import styles from '../../constants/Styles';
 import File from '../../schemas/File';
@@ -37,11 +32,12 @@ function PeopleScreen() {
   const [peopleByCrew, setPeopleByCrew] = useState<CrewSection[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState<any>([]);
-  const [selectedImage, setSelectedImage] = useState<any>([]);
+  const [selectedImage, setSelectedImage] = useState<any>(null);
   const [accessLevelAdmin, setAccessLevelAdmin] = useState<null | string>(null);
   const [accessLevelForeman, setAccessLevelForeman] = useState<null | string>(null);
   const [selectedFile, setSelectedFile] = useState<any>('');
   const [isLoading, setIsLoading] = useState(true); // State to track loading
+  const defaultProfileImage = require('@/assets/images/defaultprofile.png');
 
   const user = useUser();
   const colorScheme = useColorScheme();
@@ -116,7 +112,7 @@ function PeopleScreen() {
     };
 
     getPeople();
-  }, [peopleCollection, user.customData._account, user.customData.crew]);
+  }, [accessLevelAdmin, peopleCollection, user.customData._account, user.customData.crew]);
 
   const closeFormModal = () => {
     setModalVisible(false);
@@ -152,7 +148,6 @@ function PeopleScreen() {
   return (
     <View style={[isDarkMode ? styles.darkmode : styles.lightBackground, { flex: 1 }]}>
       <SectionList
-        style={{ marginTop: 25 }}
         sections={peopleByCrew}
         renderItem={({ item }) => (
           <TouchableOpacity
@@ -161,7 +156,11 @@ function PeopleScreen() {
               handleFileSelection(item._id);
               const folderPath = `${FileSystem.documentDirectory}/files`;
               const filePath = `${folderPath}${item.imgUrl}`;
-              setSelectedImage(filePath);
+              if (item.imgUrl === '/img/default.jpg') {
+                setSelectedImage(null);
+              } else {
+                setSelectedImage(filePath);
+              }
               setModalVisible(true);
             }}>
             <View style={styles.personContainer}>
@@ -178,171 +177,19 @@ function PeopleScreen() {
         )}
         renderSectionHeader={({ section }) => <Text style={styles.crewTitle}>{section.title}</Text>}
         keyExtractor={(item) => item._id}
-        contentContainerStyle={{ paddingBottom: 50 }} // Add some padding at the bottom to avoid overlapping with the navigation bar
+        //contentContainerStyle={{ paddingBottom: 50 }} // Add some padding at the bottom to avoid overlapping with the navigation bar
       />
-
-      <Modal visible={modalVisible} onRequestClose={closeFormModal} transparent>
-        <View style={styles.formModalContainer}>
-          <View
-            style={[
-              styles.modalHeader,
-              isDarkMode ? styles.modalHeaderDark : styles.modalHeaderLight,
-            ]}>
-            {/* Display the person's name or any other relevant data */}
-            <Text
-              style={[
-                styles.modalHeadingText,
-                isDarkMode ? styles.textInputDark : styles.headerBackgroundTextInputLight,
-              ]}>
-              {selectedPerson?.name}
-            </Text>
-          </View>
-
-          <View style={[styles.modalView, isDarkMode ? styles.darkmode : styles.lightBackground]}>
-            <ScrollView>
-              <View style={{ padding: 10 }}>
-                <View style={styles.personDetailRow}>
-                  <View style={styles.personImageContainer}>
-                    <Image style={styles.personImage} source={{ uri: `file://${selectedImage}` }} />
-                  </View>
-                </View>
-                <View style={styles.personDetailRow}>
-                  <Text style={[styles.personDetailLabel, darkMode]}>Role:</Text>
-                  <Text style={[styles.personDetailValue, darkMode]}>{selectedPerson?.role}</Text>
-                </View>
-                <View style={styles.personDetailRow}>
-                  <Text style={[styles.personDetailLabel, darkMode]}>Address:</Text>
-                  <Text style={[styles.personDetailValue, darkMode]}>
-                    {selectedPerson?.address}
-                  </Text>
-                </View>
-                <View style={styles.personDetailRow}>
-                  <Text style={[styles.personDetailLabel, darkMode]}>Phone:</Text>
-                  <TouchableOpacity onPress={() => Linking.openURL(`tel:${selectedPerson?.phone}`)}>
-                    <Text style={[styles.personDetailValue, darkMode]}>
-                      {selectedPerson?.phone}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.personDetailRow}>
-                  <Text style={[styles.personDetailLabel, darkMode]}>Alt Contact:</Text>
-                  <Text style={[styles.personDetailValue, darkMode]}>
-                    {selectedPerson?.contact}
-                  </Text>
-                </View>
-                <View style={styles.personDetailRow}>
-                  <Text style={[styles.personDetailLabel, darkMode]}>Alt Contact Phone:</Text>
-                  <TouchableOpacity
-                    onPress={() => Linking.openURL(`tel:${selectedPerson?.contactphone}`)}>
-                    <Text style={[styles.personDetailValue, darkMode]}>
-                      {selectedPerson?.contactphone}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-
-                {(accessLevelAdmin === 'on' || accessLevelForeman === 'on') && (
-                  <View style={styles.personDetailRow}>
-                    <Text style={[styles.personDetailLabel, darkMode]}>DOB:</Text>
-                    <Text style={[styles.personDetailValue, darkMode]}>{selectedPerson?.dob}</Text>
-                  </View>
-                )}
-                {(accessLevelAdmin === 'on' || accessLevelForeman === 'on') && (
-                  <View style={styles.personDetailRow}>
-                    <Text style={[styles.personDetailLabel, darkMode]}>Doctor:</Text>
-                    <Text style={[styles.personDetailValue, darkMode]}>
-                      {selectedPerson?.doctor}
-                    </Text>
-                  </View>
-                )}
-                {(accessLevelAdmin === 'on' || accessLevelForeman === 'on') && (
-                  <View style={styles.personDetailRow}>
-                    <Text style={[styles.personDetailLabel, darkMode]}>Id Type:</Text>
-                    <Text style={[styles.personDetailValue, darkMode]}>
-                      {selectedPerson?.idType}
-                    </Text>
-                  </View>
-                )}
-                {(accessLevelAdmin === 'on' || accessLevelForeman === 'on') && (
-                  <View style={styles.personDetailRow}>
-                    <Text style={[styles.personDetailLabel, darkMode]}>Medical:</Text>
-                    <Text style={[styles.personDetailValue, darkMode]}>
-                      {selectedPerson?.medical}
-                    </Text>
-                  </View>
-                )}
-                {(accessLevelAdmin === 'on' || accessLevelForeman === 'on') && (
-                  <View style={styles.personDetailRow}>
-                    <Text style={[styles.personDetailLabel, darkMode]}>Start Date:</Text>
-                    <Text style={[styles.personDetailValue, darkMode]}>
-                      {selectedPerson?.startDate}
-                    </Text>
-                  </View>
-                )}
-
-                {accessLevelAdmin === 'on' && selectedFile ? (
-                  selectedFile.length > 0 ? (
-                    <ScrollView>
-                      <Text
-                        style={[
-                          styles.modalTextBold,
-                          isDarkMode ? styles.buttonTextDark : styles.buttonTextLight,
-                        ]}>
-                        Files
-                      </Text>
-                      {selectedFile.map((file: any) => (
-                        <TouchableOpacity
-                          key={file._id}
-                          onPress={() => handleDocumentPress(file.uri)}>
-                          <View
-                            style={[
-                              styles.fileContainer,
-                              {
-                                backgroundColor: isDarkMode ? '#0a0a0a' : '#f9f9f9',
-                              },
-                            ]}>
-                            <Text
-                              style={[
-                                styles.modalTextBold,
-                                isDarkMode ? styles.buttonTextDark : styles.buttonTextLight,
-                              ]}>
-                              {file.type}
-                            </Text>
-                            <Text
-                              style={[
-                                styles.modalTextLink,
-                                isDarkMode ? styles.buttonTextDark : styles.buttonTextLight,
-                              ]}>
-                              {file.fileName}
-                            </Text>
-                          </View>
-                        </TouchableOpacity>
-                      ))}
-                    </ScrollView>
-                  ) : null
-                ) : null}
-              </View>
-            </ScrollView>
-
-            <View style={styles.buttonContainer}>
-              <Pressable
-                style={[
-                  styles.button,
-                  styles.buttonClose,
-                  isDarkMode ? styles.buttonBackgroundDark : styles.buttonBackgroundLight,
-                ]}
-                onPress={closeFormModal}>
-                <Text
-                  style={[
-                    styles.buttonText,
-                    isDarkMode ? styles.buttonTextDark : styles.headerTextLight,
-                  ]}>
-                  Close
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <PersonInfoModal
+        showCrewPersonModal={modalVisible}
+        setCrewPersonShowModal={setModalVisible}
+        selectedPerson={selectedPerson}
+        selectedImage={selectedImage}
+        defaultProfileImage={defaultProfileImage}
+        accessLevelAdmin={accessLevelAdmin}
+        accessLevelForeman={accessLevelForeman}
+        selectedFile={selectedFile}
+        setCrewShowModal={() => null}
+      />
     </View>
   );
 }

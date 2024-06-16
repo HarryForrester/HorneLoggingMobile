@@ -564,6 +564,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+    backgroundColor: '#e1e1e1',
   },
   personName: {
     fontSize: 18,

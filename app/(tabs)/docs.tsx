@@ -48,7 +48,7 @@ function DocsTab() {
                 style={[
                   styles.listItemContainer,
                   {
-                    backgroundColor: colorScheme === 'dark' ? '#1b1b1b' : '#d0d8d5',
+                    backgroundColor: colorScheme === 'dark' ? '#1b1b1b' : '#e1e1e1',
                   },
                 ]}>
                 <Text

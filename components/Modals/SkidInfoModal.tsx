@@ -49,7 +49,6 @@ const SkidInfoModal: React.FC<Props> = ({
 }) => {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
-  console.log('cunt cunt cunt', siteHazards);
   async function handleCrewMemberPress(item1: {
     _id: string;
     name: string;

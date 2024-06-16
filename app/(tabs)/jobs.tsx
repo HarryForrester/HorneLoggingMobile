@@ -28,7 +28,6 @@ const JobScreen = () => {
   const [showPdf, setShowPdf] = useState(false); // State to show or hide pdf
   //const [selectedMapId, setSelectedMapId] = useState<string>(''); // State to store selected map
   const mapsCollection = useQuery(Maps);
-  console.log('mapscollection', mapsCollection);
   const generalHazards = useQuery(GeneralHazards);
   const hazards = useQuery(Hazards);
   const app = useApp();
@@ -38,10 +37,6 @@ const JobScreen = () => {
   const navigation = useNavigation();
 
   const [selectedMap, setSelectedMap] = useState<Maps | null>(null);
-
-  useEffect(() => {
-    console.log('the selected map is ', selectedMap?.map);
-  }, [selectedMap]);
 
   useEffect(() => {
     navigation.setOptions({ headerShown: true });

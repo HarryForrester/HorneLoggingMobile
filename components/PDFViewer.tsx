@@ -54,7 +54,6 @@ const PDFViewer = ({
   generalHazard: HazardProps[];
 }) => {
   const [pdfPath, setPdfPath] = useState('');
-  console.log('the pdf path is ', pdfPath);
   const app = useApp();
 
   const [showModal, setShowModal] = useState(false);
@@ -103,30 +102,26 @@ const PDFViewer = ({
   };
 
   useEffect(() => {
-    selectedMarker?.info.siteHazards.map((hazard) => {
+    if (selectedMarker && selectedMarker.info && selectedMarker.info.siteHazards) {
       try {
         const filteredHazards = hazardsCollection
-          .filter((hazard: any) => {
-            return selectedMarker.info.siteHazards.includes(hazard.id);
-          })
+          .filter((hazard: any) =>
+            selectedMarker.info.siteHazards.includes(hazard._id.toHexString()),
+          )
           .sort((a, b) => {
             const idA = a.id;
             const idB = b.id;
 
-            if (idA < idB) {
-              return -1;
-            }
-            if (idA > idB) {
-              return 1;
-            }
+            if (idA < idB) return -1;
+            if (idA > idB) return 1;
             return 0;
           });
 
         setSiteHazards(filteredHazards);
       } catch (err) {
-        console.error('Error has occured while parsing General Hazards', err);
+        console.error('Error has occurred while parsing General Hazards:', err);
       }
-    });
+    }
   }, [hazardsCollection, selectedMarker]);
 
   useEffect(() => {
@@ -158,15 +153,12 @@ const PDFViewer = ({
       const folderPath = `${FileSystem.documentDirectory}files`;
       const url = selectedMap.map; // Assuming uri is defined in your scope
       const filePath = `${folderPath}${url}`;
-      console.log('url: cunts', url);
       const checkFileExists = async () => {
         try {
           const fileInfo = await FileSystem.getInfoAsync(filePath);
-          console.log('fileIndfo ', fileInfo);
           if (fileInfo.exists) {
             // If the file exists, set the PDF
             setPdfPath(filePath);
-            console.log('fikePgth', filePath);
           } else {
             // Optionally, handle the case where the file doesn't exist
             console.log('File does not exist.');

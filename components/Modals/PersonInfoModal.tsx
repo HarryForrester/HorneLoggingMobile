@@ -81,17 +81,15 @@ const PersonInfoModal: React.FC<Props> = ({
         </View>
         <View style={[styles.modalView, isDarkMode ? styles.darkmode : styles.lightBackground]}>
           <ScrollView>
-            <View style={{ padding: 10 }}>
-              <View style={styles.personDetailRow}>
-                <View style={styles.personImageContainer}>
-                  <Image
-                    style={styles.personImage}
-                    source={
-                      selectedImage ? { uri: `file://${selectedImage}` } : defaultProfileImage
-                    }
-                  />
-                </View>
+            <View style={styles.personDetailRow}>
+              <View style={styles.personImageContainer}>
+                <Image
+                  style={styles.personImage}
+                  source={selectedImage ? { uri: `file://${selectedImage}` } : defaultProfileImage}
+                />
               </View>
+            </View>
+            <View style={styles.skidFieldContainer}>
               <View style={styles.personDetailRow}>
                 <Text style={[styles.personDetailLabel, darkMode]}>Role:</Text>
                 <Text style={[styles.personDetailValue, darkMode]}>
@@ -168,9 +166,10 @@ const PersonInfoModal: React.FC<Props> = ({
                   </Text>
                 </View>
               )}
-
-              {accessLevelAdmin === 'on' && selectedFile ? (
-                selectedFile.length > 0 ? (
+            </View>
+            {accessLevelAdmin === 'on' && selectedFile ? (
+              selectedFile.length > 0 ? (
+                <View style={styles.skidFieldContainer}>
                   <ScrollView>
                     <Text
                       style={[
@@ -183,7 +182,7 @@ const PersonInfoModal: React.FC<Props> = ({
                       <TouchableOpacity
                         key={file._id}
                         onPress={() => handleDocumentPress(file.uri)}>
-                        <View style={styles.fileContainer}>
+                        <View style={styles.listItem}>
                           <Text
                             style={[
                               styles.modalTextBold,
@@ -202,9 +201,9 @@ const PersonInfoModal: React.FC<Props> = ({
                       </TouchableOpacity>
                     ))}
                   </ScrollView>
-                ) : null
-              ) : null}
-            </View>
+                </View>
+              ) : null
+            ) : null}
           </ScrollView>
           <View style={styles.buttonContainer}>
             <Pressable

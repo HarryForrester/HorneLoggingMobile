@@ -585,7 +585,6 @@ const styles = StyleSheet.create({
   personDetailRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
   },
   personDetailLabel: {
     fontWeight: 'bold',
